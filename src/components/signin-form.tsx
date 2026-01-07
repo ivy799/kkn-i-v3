@@ -8,14 +8,13 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
-export function SignupForm({
+export function SigninForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -24,7 +23,6 @@ export function SignupForm({
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    confirmPassword: "",
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +30,7 @@ export function SignupForm({
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/auth/signup", {
+      const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,16 +41,16 @@ export function SignupForm({
       const data = await response.json()
 
       if (!response.ok) {
-        toast.error(data.error || "Terjadi kesalahan saat registrasi")
+        toast.error(data.error || "Terjadi kesalahan saat login")
         return
       }
 
-      toast.success(data.message || "Registrasi berhasil")
+      toast.success(data.message || "Login berhasil")
       router.push("/") // Redirect ke homepage setelah berhasil
       router.refresh()
     } catch (error) {
-      console.error("Signup error:", error)
-      toast.error("Terjadi kesalahan saat registrasi")
+      console.error("Signin error:", error)
+      toast.error("Terjadi kesalahan saat login")
     } finally {
       setIsLoading(false)
     }
@@ -72,9 +70,9 @@ export function SignupForm({
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Buat Akun Anda</h1>
+                <h1 className="text-2xl font-bold">Masuk ke Akun Anda</h1>
                 <p className="text-muted-foreground text-sm text-balance">
-                  Masukkan username dan password untuk membuat akun
+                  Masukkan username dan password untuk masuk
                 </p>
               </div>
               <Field>
@@ -88,56 +86,29 @@ export function SignupForm({
                   value={formData.username}
                   onChange={handleChange}
                   disabled={isLoading}
-                  minLength={3}
                 />
-                <FieldDescription>
-                  Minimal 3 karakter
-                </FieldDescription>
               </Field>
               <Field>
-                <Field className="grid grid-cols-2 gap-4">
-                  <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      required
-                      value={formData.password}
-                      onChange={handleChange}
-                      disabled={isLoading}
-                      minLength={6}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="confirmPassword">
-                      Konfirmasi Password
-                    </FieldLabel>
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      required
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      disabled={isLoading}
-                      minLength={6}
-                    />
-                  </Field>
-                </Field>
-                <FieldDescription>
-                  Minimal 6 karakter
-                </FieldDescription>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                />
               </Field>
               <Field>
                 <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Mendaftar..." : "Buat Akun"}
+                  {isLoading ? "Masuk..." : "Masuk"}
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Sudah punya akun?{" "}
-                <a href="/auth/signin" className="underline">
-                  Masuk
+                Belum punya akun?{" "}
+                <a href="/auth/signup" className="underline">
+                  Daftar
                 </a>
               </FieldDescription>
             </FieldGroup>
@@ -151,17 +122,6 @@ export function SignupForm({
           </div>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
-        Dengan melanjutkan, Anda menyetujui{" "}
-        <a href="#" className="underline">
-          Ketentuan Layanan
-        </a>{" "}
-        dan{" "}
-        <a href="#" className="underline">
-          Kebijakan Privasi
-        </a>
-        .
-      </FieldDescription>
     </div>
   )
 }
