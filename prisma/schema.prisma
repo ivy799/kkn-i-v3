@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ENUM
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ArticleCategory {
+  NEWS
+  EVENT
+  ANNOUNCEMENT
+}
+
+enum eventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+}
+
+enum BusinessStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  role      UserRole  @default(USER)
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  articles  Article[]
+
+  @@map("users")
+}
+
+model VillageProfile {
+  id                 Int       @id @default(autoincrement())
+  villageName        String?   @map("village_name")
+  address            String?   @db.Text
+  email              String?
+  phone              String?
+  historyDescription String?   @db.Text @map("history_description")
+  vision             String?   @db.Text
+  mission            String?   @db.Text
+  mapEmbedCode       String?   @db.Text @map("map_embed_code")
+  updatedAt          DateTime? @updatedAt @map("updated_at")
+
+  @@map("village_profile")
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  title     String?
+  slug      String?  @unique
+  content   String?  @db.Text
+  thumbnail String?
+  category  ArticleCategory?
+  status    ArticleStatus   @default(DRAFT)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  authorId  Int?     @map("author_id")
+  author    User?    @relation(fields: [authorId], references: [id])
+
+  @@map("articles")
+}
+
+model Gallery {
+  id          Int       @id @default(autoincrement())
+  title       String?
+  description String?   @db.Text
+  media       String?
+  createdAt   DateTime? @default(now()) @map("created_at")
+
+  @@map("galleries")
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  title       String?
+  slug        String?
+  description String?   @db.Text
+  location    String?
+  startDate   DateTime? @map("start_date")
+  endDate     DateTime? @map("end_date")
+  image       String?
+  status      eventStatus    @default(UPCOMING)
+
+  @@map("events")
+}
+
+model Business {
+  id              Int      @id @default(autoincrement())
+  type            String?
+  status          BusinessStatus   @default(PENDING)
+  name            String?
+  slug            String?
+  ownerName       String?  @map("owner_name")
+  phoneNumber     String?  @map("phone_number")
+  description     String?  @db.Text
+  minimumPrice    String?  @map("minimum_price")
+  maximumPrice    String?  @map("maximum_price")
+  address         String?
+  productsImage   String?  @map("products_image")
+  rejectionReason String?  @db.Text @map("rejection_reason")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("businesses")
+}
+
+model TourismSpot {
+  id           Int     @id @default(autoincrement())
+  name         String?
+  slug         String?
+  description  String? @db.Text
+  address      String?
+  mapUrl       String? @map("map_url")
+  ticketPrice  String? @map("ticket_price")
+  facilities   String? @db.Text
+  openingHours String? @map("opening_hours")
+  closingHours String? @map("closing_hours")
+  contactPerson String? @map("contact_person")
+  image        String?
+
+  @@map("tourism_spots")
+}
