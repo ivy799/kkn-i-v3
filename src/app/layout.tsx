@@ -18,11 +18,13 @@ export default async function RootLayout({
 
   return (
     <html lang="id">
-      <body>
-        <nav className="p-5 fixed top-0 left-0 right-0 bg-white z-50">
+      <body className="min-h-screen">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
           <Navbar user={user} />
-        </nav>
-        {children}
+        </header>
+        <main className="pt-20">
+          {children}
+        </main>
         <Toaster position="top-right" richColors />
       </body>
     </html>

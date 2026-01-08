@@ -157,7 +157,6 @@ const Navbar1 = ({
     e: React.MouseEvent<HTMLAnchorElement>,
     url: string
   ) => {
-    // Prevent default jika bukan admin dan url adalah #
     if (url === "#" && !isAdmin) {
       e.preventDefault();
       return;
@@ -181,13 +180,14 @@ const Navbar1 = ({
   };
 
   return (
-    <section className="py-4">
-      <div className="container">
-        <nav className="hidden justify-between lg:flex">
+    <nav className="w-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center justify-between h-16">
           <div className="flex items-center gap-6">
             <a href={logo.url} className="flex items-center gap-2">
-              <img src={logo.src} className="w-8" alt={logo.alt} />
-              <span className="text-lg font-semibold">{logo.title}</span>
+              <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
+              <span className="text-lg font-semibold whitespace-nowrap">{logo.title}</span>
             </a>
             <div className="flex items-center">
               <NavigationMenu>
@@ -224,78 +224,78 @@ const Navbar1 = ({
               </a>
             </Button>
           </div>
-        </nav>
-        <div className="block lg:hidden">
-          <div className="flex items-center justify-between">
-            <a href={logo.url} className="flex items-center gap-2">
-              <img src={logo.src} className="w-8" alt={logo.alt} />
-              <span className="text-lg font-semibold">{logo.title}</span>
-            </a>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="size-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
-                      <img src={logo.src} className="w-8" alt={logo.alt} />
-                      <span className="text-lg font-semibold">
-                        {logo.title}
-                      </span>
-                    </a>
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="my-6 flex flex-col gap-6">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
-                    {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
-                  <div className="border-t py-4">
-                    <div className="grid grid-cols-2 justify-start">
-                      {mobileExtraLinks.map((link, idx) => (
-                        <a
-                          key={idx}
-                          className="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-accent-foreground"
-                          href={link.url}
-                        >
-                          {link.name}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <Button
-                      asChild={isAdmin || auth.login.url !== "#"}
-                      variant="outline"
-                      className={!isAdmin && auth.login.url === "#" ? "cursor-default" : ""}
-                    >
-                      {isAdmin || auth.login.url !== "#" ? (
-                        <a href={auth.login.url} onClick={(e) => handleAuthClick(e, auth.login.url)}>
-                          {auth.login.text}
-                        </a>
-                      ) : (
-                        <span>{auth.login.text}</span>
-                      )}
-                    </Button>
-                    <Button asChild>
-                      <a href={auth.signup.url} onClick={(e) => handleAuthClick(e, auth.signup.url)}>
-                        {auth.signup.text}
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="flex lg:hidden items-center justify-between h-16">
+          <a href={logo.url} className="flex items-center gap-2">
+            <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
+            <span className="text-lg font-semibold">{logo.title}</span>
+          </a>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Menu className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>
+                  <a href={logo.url} className="flex items-center gap-2">
+                    <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
+                    <span className="text-lg font-semibold">
+                      {logo.title}
+                    </span>
+                  </a>
+                </SheetTitle>
+              </SheetHeader>
+              <div className="my-6 flex flex-col gap-6">
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="flex w-full flex-col gap-4"
+                >
+                  {menu.map((item) => renderMobileMenuItem(item))}
+                </Accordion>
+                <div className="border-t py-4">
+                  <div className="grid grid-cols-2 justify-start gap-2">
+                    {mobileExtraLinks.map((link, idx) => (
+                      <a
+                        key={idx}
+                        className="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-accent-foreground"
+                        href={link.url}
+                      >
+                        {link.name}
                       </a>
-                    </Button>
+                    ))}
                   </div>
                 </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+                <div className="flex flex-col gap-3">
+                  <Button
+                    asChild={isAdmin || auth.login.url !== "#"}
+                    variant="outline"
+                    className={!isAdmin && auth.login.url === "#" ? "cursor-default" : ""}
+                  >
+                    {isAdmin || auth.login.url !== "#" ? (
+                      <a href={auth.login.url} onClick={(e) => handleAuthClick(e, auth.login.url)}>
+                        {auth.login.text}
+                      </a>
+                    ) : (
+                      <span>{auth.login.text}</span>
+                    )}
+                  </Button>
+                  <Button asChild>
+                    <a href={auth.signup.url} onClick={(e) => handleAuthClick(e, auth.signup.url)}>
+                      {auth.signup.text}
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-    </section >
+    </nav>
   );
 };
 

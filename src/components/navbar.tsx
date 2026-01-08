@@ -38,7 +38,7 @@ export function Navbar({ user }: NavbarProps) {
     <Navbar1
       logo={{
         url: "/",
-        src: "/logo.svg",
+        src: "/next.svg",
         alt: "Logo Desa",
         title: "Desa KKN",
       }}
