@@ -157,7 +157,7 @@ model TourismSpotFacility {
   description   String?   @db.Text
   createdAt     DateTime? @default(now()) @map("created_at")
 
-  tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id])
+  tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id], onDelete: Cascade)
 
   @@map("tourism_spot_facilities")
 }
@@ -170,7 +170,8 @@ model TourismSpotGallery {
   media         String?
   createdAt     DateTime? @default(now()) @map("created_at")
 
-  tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id])
+  tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id], onDelete: Cascade)
+  
 
   @@map("tourism_spot_gallery")
 }
