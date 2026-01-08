@@ -3,7 +3,6 @@
 import {
   IconBusinessplan,
   IconDashboard,
-  IconFolder,
   IconInnerShadowTop,
   IconListDetails,
   IconSettings,

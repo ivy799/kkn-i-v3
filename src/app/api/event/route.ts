@@ -6,6 +6,7 @@ import path from 'path';
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
+        
         const title = formData.get("title") as string;
         const slug = formData.get("slug") as string;
         const description = formData.get("description") as string;
