@@ -9,9 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
 }
 
 // ENUM
@@ -44,15 +42,14 @@ enum BusinessStatus {
   REJECTED
 }
 
-
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
   password  String
-  role      UserRole  @default(USER)
-  createdAt DateTime  @default(now()) @map("created_at")
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
 
-  articles  Article[]
+  articles Article[]
 
   @@map("users")
 }
@@ -63,87 +60,117 @@ model VillageProfile {
   address            String?   @db.Text
   email              String?
   phone              String?
-  historyDescription String?   @db.Text @map("history_description")
+  historyDescription String?   @map("history_description") @db.Text
   vision             String?   @db.Text
   mission            String?   @db.Text
-  mapEmbedCode       String?   @db.Text @map("map_embed_code")
+  mapEmbedCode       String?   @map("map_embed_code") @db.Text
   updatedAt          DateTime? @updatedAt @map("updated_at")
 
   @@map("village_profile")
 }
 
 model Article {
-  id        Int      @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   title     String?
-  slug      String?  @unique
-  content   String?  @db.Text
+  slug      String?          @unique
+  content   String?          @db.Text
   thumbnail String?
   category  ArticleCategory?
-  status    ArticleStatus   @default(DRAFT)
-  createdAt DateTime @default(now()) @map("created_at")
+  status    ArticleStatus    @default(DRAFT)
+  createdAt DateTime         @default(now()) @map("created_at")
 
-  authorId  Int?     @map("author_id")
-  author    User?    @relation(fields: [authorId], references: [id])
+  authorId Int?  @map("author_id")
+  author   User? @relation(fields: [authorId], references: [id])
 
   @@map("articles")
 }
 
-model Gallery {
-  id          Int       @id @default(autoincrement())
-  title       String?
-  description String?   @db.Text
-  media       String?
-  createdAt   DateTime? @default(now()) @map("created_at")
-
-  @@map("galleries")
-}
-
 model Event {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String?
   slug        String?
-  description String?   @db.Text
+  description String?     @db.Text
   location    String?
-  startDate   DateTime? @map("start_date")
-  endDate     DateTime? @map("end_date")
+  startDate   DateTime?   @map("start_date")
+  endDate     DateTime?   @map("end_date")
   image       String?
-  status      eventStatus    @default(UPCOMING)
+  status      eventStatus @default(UPCOMING)
 
   @@map("events")
 }
 
 model Business {
-  id              Int      @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
   type            String?
-  status          BusinessStatus   @default(PENDING)
+  status          BusinessStatus @default(PENDING)
   name            String?
   slug            String?
-  ownerName       String?  @map("owner_name")
-  phoneNumber     String?  @map("phone_number")
-  description     String?  @db.Text
-  minimumPrice    String?  @map("minimum_price")
-  maximumPrice    String?  @map("maximum_price")
+  ownerName       String?        @map("owner_name")
+  phoneNumber     String?        @map("phone_number")
+  description     String?        @db.Text
+  minimumPrice    Int?           @map("minimum_price")
+  maximumPrice    Int?           @map("maximum_price")
   address         String?
-  productsImage   String?  @map("products_image")
-  rejectionReason String?  @db.Text @map("rejection_reason")
-  createdAt       DateTime @default(now()) @map("created_at")
+  rejectionReason String?        @map("rejection_reason") @db.Text
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  BusinessGallery BusinessGallery[]
 
   @@map("businesses")
 }
 
+model BusinessGallery {
+  id          Int       @id @default(autoincrement())
+  businessId  Int       @map("business_id")
+  title       String?
+  description String?   @db.Text
+  media       String?
+  createdAt   DateTime? @default(now()) @map("created_at")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("business_gallery")
+}
+
 model TourismSpot {
-  id           Int     @id @default(autoincrement())
-  name         String?
-  slug         String?
-  description  String? @db.Text
-  address      String?
-  mapUrl       String? @map("map_url")
-  ticketPrice  String? @map("ticket_price")
-  facilities   String? @db.Text
-  openingHours String? @map("opening_hours")
-  closingHours String? @map("closing_hours")
+  id            Int     @id @default(autoincrement())
+  name          String?
+  slug          String?
+  description   String? @db.Text
+  address       String?
+  mapUrl        String? @map("map_url")
+  ticketPrice   String? @map("ticket_price")
+  openingHours  Int?    @map("opening_hours")
+  closingHours  Int?    @map("closing_hours")
   contactPerson String? @map("contact_person")
-  image        String?
+
+  TourismSpotGallery  TourismSpotGallery[]
+  TourismSpotFacility TourismSpotFacility[]
 
   @@map("tourism_spots")
+}
+
+model TourismSpotFacility {
+  id            Int       @id @default(autoincrement())
+  tourismSpotId Int       @map("tourism_spot_id")
+  name          String?
+  description   String?   @db.Text
+  createdAt     DateTime? @default(now()) @map("created_at")
+
+  tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id])
+
+  @@map("tourism_spot_facilities")
+}
+
+model TourismSpotGallery {
+  id            Int       @id @default(autoincrement())
+  tourismSpotId Int       @map("tourism_spot_id")
+  title         String?
+  description   String?   @db.Text
+  media         String?
+  createdAt     DateTime? @default(now()) @map("created_at")
+
+  tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id])
+
+  @@map("tourism_spot_gallery")
 }

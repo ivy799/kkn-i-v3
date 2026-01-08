@@ -1,7 +1,5 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
 export async function POST(request: NextRequest) {
     try {
@@ -16,29 +14,12 @@ export async function POST(request: NextRequest) {
         const maximumPrice = formData.get("maximumPrice") as string;
         const address = formData.get("address") as string;
         const status = formData.get("status") as string;
-        const file = formData.get("productsImage") as File | null;
 
         if (!type || !name || !ownerName || !phoneNumber || !description || !address) {
             return NextResponse.json(
                 { message: "Type, name, owner name, phone number, description, and address are required" },
                 { status: 400 }
             );
-        }
-
-        let imagePath: string | null = null;
-
-        if (file && file.size > 0) {
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-
-            const uploadDir = path.join(process.cwd(), "public", "uploads", "businesses");
-            await mkdir(uploadDir, { recursive: true });
-
-            const fileName = `${Date.now()}-${file.name}`;
-            const filePath = path.join(uploadDir, fileName);
-
-            await writeFile(filePath, buffer);
-            imagePath = `/uploads/businesses/${fileName}`;
         }
 
         const newBusiness = await getPrisma.business.create({
@@ -49,10 +30,9 @@ export async function POST(request: NextRequest) {
                 ownerName,
                 phoneNumber,
                 description,
-                minimumPrice: minimumPrice || null,
-                maximumPrice: maximumPrice || null,
+                minimumPrice: minimumPrice ? parseFloat(minimumPrice) : null,
+                maximumPrice: maximumPrice ? parseFloat(maximumPrice) : null,
                 address,
-                productsImage: imagePath,
                 status: status as any || 'PENDING',
             },
         });
@@ -102,9 +82,17 @@ export async function GET(request: NextRequest) {
                 minimumPrice: true,
                 maximumPrice: true,
                 address: true,
-                productsImage: true,
                 rejectionReason: true,
                 createdAt: true,
+                // BusinessGallery: {
+                //     select: {
+                //         id: true,
+                //         title: true,
+                //         description: true,
+                //         media: true,
+                //         createdAt: true,
+                //     }
+                // }
             },
             orderBy: {
                 createdAt: 'desc'
