@@ -11,27 +11,30 @@ enum UserRole {
   ADMIN
   USER
 }
+
 enum ArticleStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
 }
+
 enum ArticleCategory {
   NEWS
   EVENT
   ANNOUNCEMENT
 }
+
 enum eventStatus {
   UPCOMING
   ONGOING
   COMPLETED
 }
+
 enum BusinessStatus {
   PENDING
   APPROVED
   REJECTED
 }
-
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -46,15 +49,15 @@ model User {
 }
 
 model VillageProfile {
-  id                 Int       @id @default(autoincrement())
-  villageName        String?   @map("village_name")
-  address            String?   @db.Text
-  email              String?
-  phone              String?
-  vision             String?   @db.Text
-  mission            String?   @db.Text
-  mapEmbedCode       String?   @map("map_embed_code") @db.Text
-  updatedAt          DateTime? @updatedAt @map("updated_at")
+  id           Int       @id @default(autoincrement())
+  villageName  String?   @map("village_name")
+  address      String?   @db.Text
+  email        String?
+  phone        String?
+  vision       String?   @db.Text
+  mission      String?   @db.Text
+  mapEmbedCode String?   @map("map_embed_code") @db.Text
+  updatedAt    DateTime? @updatedAt @map("updated_at")
 
   @@map("village_profile")
 }
@@ -128,7 +131,7 @@ model TourismSpot {
   ticketPrice   Int?      @map("ticket_price")
   openingHours  DateTime? @map("opening_hours") @db.Time()
   closingHours  DateTime? @map("closing_hours") @db.Time()
-  contactPerson Int?      @map("contact_person")
+  contactPerson String?   @map("contact_person")
 
   TourismSpotGallery  TourismSpotGallery[]
   TourismSpotFacility TourismSpotFacility[]

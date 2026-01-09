@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
             where: { name }
         });
 
-
         if (existingSpot) {
             return NextResponse.json(
                 { message: "A tourism spot with this name already exists" },
@@ -41,9 +40,9 @@ export async function POST(request: NextRequest) {
                 description,
                 address,
                 mapUrl: mapUrl || null,
-                ticketPrice: ticketPrice || null,
-                openingHours: openingHours || null,
-                closingHours: closingHours || null,
+                ticketPrice: ticketPrice ? parseInt(ticketPrice) : null,
+                openingHours: openingHours ? new Date(openingHours) : null,
+                closingHours: closingHours ? new Date(closingHours) : null,
                 contactPerson: contactPerson || null,
             },
         });

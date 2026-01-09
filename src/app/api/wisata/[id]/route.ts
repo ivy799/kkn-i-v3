@@ -28,16 +28,15 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
             contactPerson,
         } = body;
 
-
         const updateData: any = {};
 
         if (name) updateData.name = name;
         if (description) updateData.description = description;
         if (address) updateData.address = address;
         if (mapUrl !== undefined) updateData.mapUrl = mapUrl || null;
-        if (ticketPrice !== undefined) updateData.ticketPrice = ticketPrice || null;
-        if (openingHours !== undefined) updateData.openingHours = openingHours ? parseInt(openingHours) : null;
-        if (closingHours !== undefined) updateData.closingHours = closingHours ? parseInt(closingHours) : null;
+        if (ticketPrice !== undefined) updateData.ticketPrice = ticketPrice ? parseInt(ticketPrice) : null;
+        if (openingHours !== undefined) updateData.openingHours = openingHours ? new Date(openingHours) : null;
+        if (closingHours !== undefined) updateData.closingHours = closingHours ? new Date(closingHours) : null;
         if (contactPerson !== undefined) updateData.contactPerson = contactPerson || null;
 
         const update_data = await getPrisma.tourismSpot.update({
