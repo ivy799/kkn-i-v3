@@ -3,18 +3,15 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(_request: NextRequest) {
     try {
-        // Ambil data pertama atau buat jika belum ada
         let villageProfile = await getPrisma.villageProfile.findFirst();
 
         if (!villageProfile) {
-            // Jika belum ada data, buat data default
             villageProfile = await getPrisma.villageProfile.create({
                 data: {
                     villageName: null,
                     address: null,
                     email: null,
                     phone: null,
-                    historyDescription: null,
                     vision: null,
                     mission: null,
                     mapEmbedCode: null,
@@ -45,24 +42,20 @@ export async function PUT(request: NextRequest) {
             address,
             email,
             phone,
-            historyDescription,
             vision,
             mission,
             mapEmbedCode
         } = body;
 
-        // Cari data yang sudah ada
         let villageProfile = await getPrisma.villageProfile.findFirst();
 
         if (!villageProfile) {
-            // Jika belum ada, buat baru
             villageProfile = await getPrisma.villageProfile.create({
                 data: {
                     villageName: villageName || null,
                     address: address || null,
                     email: email || null,
                     phone: phone || null,
-                    historyDescription: historyDescription || null,
                     vision: vision || null,
                     mission: mission || null,
                     mapEmbedCode: mapEmbedCode || null,
@@ -76,14 +69,12 @@ export async function PUT(request: NextRequest) {
             });
         }
 
-        // Update data yang sudah ada
         const updateData: any = {};
         
         if (villageName !== undefined) updateData.villageName = villageName || null;
         if (address !== undefined) updateData.address = address || null;
         if (email !== undefined) updateData.email = email || null;
         if (phone !== undefined) updateData.phone = phone || null;
-        if (historyDescription !== undefined) updateData.historyDescription = historyDescription || null;
         if (vision !== undefined) updateData.vision = vision || null;
         if (mission !== undefined) updateData.mission = mission || null;
         if (mapEmbedCode !== undefined) updateData.mapEmbedCode = mapEmbedCode || null;

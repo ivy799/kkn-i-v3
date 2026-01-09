@@ -16,18 +16,19 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
             );
         }
 
-        const formData = await request.formData();
-        const type = formData.get("type") as string;
-        const name = formData.get("name") as string;
-        const slug = formData.get("slug") as string;
-        const ownerName = formData.get("ownerName") as string;
-        const phoneNumber = formData.get("phoneNumber") as string;
-        const description = formData.get("description") as string;
-        const minimumPrice = formData.get("minimumPrice") as string;
-        const maximumPrice = formData.get("maximumPrice") as string;
-        const address = formData.get("address") as string;
-        const status = formData.get("status") as string;
-        const rejectionReason = formData.get("rejectionReason") as string;
+        const body = await request.json();
+        const {
+            type,
+            status,
+            name,
+            ownerName,
+            phoneNumber,
+            description,
+            minimumPrice,
+            maximumPrice,
+            address,
+            rejectionReason,
+        } = body;
 
         const validStatuses = ['PENDING', 'APPROVED', 'REJECTED'];
         if (status && !validStatuses.includes(status)) {
@@ -41,7 +42,6 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
 
         if (type) updateData.type = type;
         if (name) updateData.name = name;
-        if (slug !== undefined) updateData.slug = slug || null;
         if (ownerName) updateData.ownerName = ownerName;
         if (phoneNumber) updateData.phoneNumber = phoneNumber;
         if (description) updateData.description = description;
@@ -116,7 +116,6 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
                 type: true,
                 status: true,
                 name: true,
-                slug: true,
                 ownerName: true,
                 phoneNumber: true,
                 description: true,
@@ -125,18 +124,18 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
                 address: true,
                 rejectionReason: true,
                 createdAt: true,
-                // BusinessGallery: {
-                //     select: {
-                //         id: true,
-                //         title: true,
-                //         description: true,
-                //         media: true,
-                //         createdAt: true,
-                //     },
-                //     orderBy: {
-                //         createdAt: 'desc'
-                //     }
-                // }
+                BusinessGallery: {
+                    select: {
+                        id: true,
+                        title: true,
+                        description: true,
+                        media: true,
+                        createdAt: true,
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
+                }
             }
         });
 

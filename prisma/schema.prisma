@@ -1,15 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // ENUM
@@ -17,30 +11,27 @@ enum UserRole {
   ADMIN
   USER
 }
-
 enum ArticleStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
 }
-
 enum ArticleCategory {
   NEWS
   EVENT
   ANNOUNCEMENT
 }
-
 enum eventStatus {
   UPCOMING
   ONGOING
   COMPLETED
 }
-
 enum BusinessStatus {
   PENDING
   APPROVED
   REJECTED
 }
+
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -60,7 +51,6 @@ model VillageProfile {
   address            String?   @db.Text
   email              String?
   phone              String?
-  historyDescription String?   @map("history_description") @db.Text
   vision             String?   @db.Text
   mission            String?   @db.Text
   mapEmbedCode       String?   @map("map_embed_code") @db.Text
@@ -72,7 +62,6 @@ model VillageProfile {
 model Article {
   id        Int              @id @default(autoincrement())
   title     String?
-  slug      String?          @unique
   content   String?          @db.Text
   thumbnail String?
   category  ArticleCategory?
@@ -88,7 +77,6 @@ model Article {
 model Event {
   id          Int         @id @default(autoincrement())
   title       String?
-  slug        String?
   description String?     @db.Text
   location    String?
   startDate   DateTime?   @map("start_date")
@@ -104,7 +92,6 @@ model Business {
   type            String?
   status          BusinessStatus @default(PENDING)
   name            String?
-  slug            String?
   ownerName       String?        @map("owner_name")
   phoneNumber     String?        @map("phone_number")
   description     String?        @db.Text
@@ -133,16 +120,15 @@ model BusinessGallery {
 }
 
 model TourismSpot {
-  id            Int     @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String?
-  slug          String?
-  description   String? @db.Text
+  description   String?   @db.Text
   address       String?
-  mapUrl        String? @map("map_url")
-  ticketPrice   String? @map("ticket_price")
-  openingHours  Int?    @map("opening_hours")
-  closingHours  Int?    @map("closing_hours")
-  contactPerson String? @map("contact_person")
+  mapUrl        String?   @map("map_url")
+  ticketPrice   Int?      @map("ticket_price")
+  openingHours  DateTime? @map("opening_hours") @db.Time()
+  closingHours  DateTime? @map("closing_hours") @db.Time()
+  contactPerson Int?      @map("contact_person")
 
   TourismSpotGallery  TourismSpotGallery[]
   TourismSpotFacility TourismSpotFacility[]
@@ -171,7 +157,6 @@ model TourismSpotGallery {
   createdAt     DateTime? @default(now()) @map("created_at")
 
   tourismSpot TourismSpot @relation(fields: [tourismSpotId], references: [id], onDelete: Cascade)
-  
 
   @@map("tourism_spot_gallery")
 }

@@ -5,16 +5,17 @@ import path from 'path';
 
 export async function POST(request: NextRequest) {
     try {
-        const formData = await request.formData();
+        const body = await request.json();
         
-        const title = formData.get("title") as string;
-        const slug = formData.get("slug") as string;
-        const description = formData.get("description") as string;
-        const location = formData.get("location") as string;
-        const startDate = formData.get("startDate") as string;
-        const endDate = formData.get("endDate") as string;
-        const status = formData.get("status") as string;
-        const file = formData.get("image") as File | null;
+        const {
+            title,
+            description,
+            location,
+            startDate,
+            endDate,
+            image,
+            status,
+        } = body;
 
         if (!title || !description || !location || !startDate) {
             return NextResponse.json(
@@ -25,14 +26,14 @@ export async function POST(request: NextRequest) {
 
         let imagePath: string | null = null;
 
-        if (file && file.size > 0) {
-            const bytes = await file.arrayBuffer();
+        if (image && image.size > 0) {
+            const bytes = await image.arrayBuffer();
             const buffer = Buffer.from(bytes);
 
             const uploadDir = path.join(process.cwd(), "public", "uploads", "events");
             await mkdir(uploadDir, { recursive: true });
 
-            const fileName = `${Date.now()}-${file.name}`;
+            const fileName = `${Date.now()}-${image.name}`;
             const filePath = path.join(uploadDir, fileName);
 
             await writeFile(filePath, buffer);
@@ -42,7 +43,6 @@ export async function POST(request: NextRequest) {
         const newEvent = await getPrisma.event.create({
             data: {
                 title,
-                slug: slug || null,
                 description,
                 location,
                 startDate: new Date(startDate),
@@ -73,7 +73,6 @@ export async function GET(request: NextRequest) {
             select: {
                 id: true,
                 title: true,
-                slug: true,
                 description: true,
                 location: true,
                 startDate: true,

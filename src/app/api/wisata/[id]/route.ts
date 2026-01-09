@@ -16,21 +16,22 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
             );
         }
 
-        const formData = await request.formData();
-        const name = formData.get("name") as string;
-        const slug = formData.get("slug") as string;
-        const description = formData.get("description") as string;
-        const address = formData.get("address") as string;
-        const mapUrl = formData.get("mapUrl") as string;
-        const ticketPrice = formData.get("ticketPrice") as string;
-        const openingHours = formData.get("openingHours") as string;
-        const closingHours = formData.get("closingHours") as string;
-        const contactPerson = formData.get("contactPerson") as string;
+        const body = await request.json();
+        const {
+            name,
+            description,
+            address,
+            mapUrl,
+            ticketPrice,
+            openingHours,
+            closingHours,
+            contactPerson,
+        } = body;
+
 
         const updateData: any = {};
 
         if (name) updateData.name = name;
-        if (slug !== undefined) updateData.slug = slug || null;
         if (description) updateData.description = description;
         if (address) updateData.address = address;
         if (mapUrl !== undefined) updateData.mapUrl = mapUrl || null;
@@ -102,7 +103,6 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
             select: {
                 id: true,
                 name: true,
-                slug: true,
                 description: true,
                 address: true,
                 mapUrl: true,

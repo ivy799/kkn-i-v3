@@ -3,16 +3,18 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
     try {
-        const formData = await request.formData();
-        const name = formData.get("name") as string;
-        const slug = formData.get("slug") as string;
-        const description = formData.get("description") as string;
-        const address = formData.get("address") as string;
-        const mapUrl = formData.get("mapUrl") as string;
-        const ticketPrice = formData.get("ticketPrice") as string;
-        const openingHours = formData.get("openingHours") as string;
-        const closingHours = formData.get("closingHours") as string;
-        const contactPerson = formData.get("contactPerson") as string;
+        const body = await request.json();
+
+        const {
+            name,
+            description,
+            address,
+            mapUrl,
+            ticketPrice,
+            openingHours,
+            closingHours,
+            contactPerson
+        } = body;
 
         if (!name || !description || !address) {
             return NextResponse.json(
@@ -21,16 +23,27 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const existingSpot = await getPrisma.tourismSpot.findFirst({
+            where: { name }
+        });
+
+
+        if (existingSpot) {
+            return NextResponse.json(
+                { message: "A tourism spot with this name already exists" },
+                { status: 400 }
+            );
+        }
+
         const newTourismSpot = await getPrisma.tourismSpot.create({
             data: {
                 name,
-                slug: slug || null,
                 description,
                 address,
                 mapUrl: mapUrl || null,
                 ticketPrice: ticketPrice || null,
-                openingHours: openingHours ? parseInt(openingHours) : null,
-                closingHours: closingHours ? parseInt(closingHours) : null,
+                openingHours: openingHours || null,
+                closingHours: closingHours || null,
                 contactPerson: contactPerson || null,
             },
         });
@@ -56,7 +69,6 @@ export async function GET(request: NextRequest) {
             select: {
                 id: true,
                 name: true,
-                slug: true,
                 description: true,
                 address: true,
                 mapUrl: true,

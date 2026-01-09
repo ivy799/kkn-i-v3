@@ -3,17 +3,19 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
     try {
-        const formData = await request.formData();
-        const type = formData.get("type") as string;
-        const name = formData.get("name") as string;
-        const slug = formData.get("slug") as string;
-        const ownerName = formData.get("ownerName") as string;
-        const phoneNumber = formData.get("phoneNumber") as string;
-        const description = formData.get("description") as string;
-        const minimumPrice = formData.get("minimumPrice") as string;
-        const maximumPrice = formData.get("maximumPrice") as string;
-        const address = formData.get("address") as string;
-        const status = formData.get("status") as string;
+        
+        const body = await request.json();
+        const {
+            type,
+            status,
+            name,
+            ownerName,
+            phoneNumber,
+            description,
+            minimumPrice,
+            maximumPrice,
+            address,
+        } = body;
 
         if (!type || !name || !ownerName || !phoneNumber || !description || !address) {
             return NextResponse.json(
@@ -26,7 +28,6 @@ export async function POST(request: NextRequest) {
             data: {
                 type,
                 name,
-                slug: slug || null,
                 ownerName,
                 phoneNumber,
                 description,
@@ -75,7 +76,6 @@ export async function GET(request: NextRequest) {
                 type: true,
                 status: true,
                 name: true,
-                slug: true,
                 ownerName: true,
                 phoneNumber: true,
                 description: true,
@@ -84,15 +84,15 @@ export async function GET(request: NextRequest) {
                 address: true,
                 rejectionReason: true,
                 createdAt: true,
-                // BusinessGallery: {
-                //     select: {
-                //         id: true,
-                //         title: true,
-                //         description: true,
-                //         media: true,
-                //         createdAt: true,
-                //     }
-                // }
+                BusinessGallery: {
+                    select: {
+                        id: true,
+                        title: true,
+                        description: true,
+                        media: true,
+                        createdAt: true,
+                    }
+                }
             },
             orderBy: {
                 createdAt: 'desc'
