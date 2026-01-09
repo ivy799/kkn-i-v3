@@ -36,7 +36,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
@@ -51,7 +51,7 @@ const data = {
     },
     {
       title: "Acara",
-      url: "#",
+      url: "/dashboard/events",
       icon: IconCalendarEvent,
     },
     {
