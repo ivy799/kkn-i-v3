@@ -2,14 +2,13 @@
 
 import {
   IconBusinessplan,
+  IconCalendarEvent,
   IconDashboard,
   IconInnerShadowTop,
-  IconListDetails,
-  IconSettings,
-  IconUsers,
-  IconCalendarEvent,
-  IconNews,
   IconMap,
+  IconNews,
+  IconSettings,
+  IconUsers
 } from "@tabler/icons-react"
 import * as React from "react"
 
@@ -25,7 +24,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Icon } from "lucide-react"
 
 const data = {
   user: {
@@ -95,7 +93,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
