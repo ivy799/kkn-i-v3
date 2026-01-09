@@ -39,12 +39,12 @@ const data = {
     },
     {
       title: "Wisata",
-      url: "#",
+      url: "/dashboard/tourism",
       icon: IconMap,
     },
     {
       title: "Bisnis",
-      url: "#",
+      url: "/dashboard/business",
       icon: IconBusinessplan,
     },
     {
