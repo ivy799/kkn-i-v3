@@ -1,21 +1,18 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { uploadFile } from '@/lib/storageUtils';
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json();
-        
-        const {
-            title,
-            description,
-            location,
-            startDate,
-            endDate,
-            image,
-            status,
-        } = body;
+        const formData = await request.formData();
+
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+        const location = formData.get('location') as string;
+        const startDate = formData.get('startDate') as string;
+        const endDate = formData.get('endDate') as string | null;
+        const image = formData.get('image') as File | null;
+        const status = formData.get('status') as string;
 
         if (!title || !description || !location || !startDate) {
             return NextResponse.json(
@@ -24,20 +21,20 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        let imagePath: string | null = null;
+        let imageUrl: string | null = null;
 
+        // Upload image ke Supabase Storage jika ada
         if (image && image.size > 0) {
-            const bytes = await image.arrayBuffer();
-            const buffer = Buffer.from(bytes);
+            const uploadResult = await uploadFile('events', image);
 
-            const uploadDir = path.join(process.cwd(), "public", "uploads", "events");
-            await mkdir(uploadDir, { recursive: true });
+            if (!uploadResult.success) {
+                return NextResponse.json(
+                    { message: `Error uploading image: ${uploadResult.error}` },
+                    { status: 500 }
+                );
+            }
 
-            const fileName = `${Date.now()}-${image.name}`;
-            const filePath = path.join(uploadDir, fileName);
-
-            await writeFile(filePath, buffer);
-            imagePath = `/uploads/events/${fileName}`;
+            imageUrl = uploadResult.publicUrl || null;
         }
 
         const newEvent = await getPrisma.event.create({
@@ -47,7 +44,7 @@ export async function POST(request: NextRequest) {
                 location,
                 startDate: new Date(startDate),
                 endDate: endDate ? new Date(endDate) : null,
-                image: imagePath,
+                image: imageUrl,
                 status: status as any || 'UPCOMING',
             },
         });

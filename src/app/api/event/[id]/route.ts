@@ -1,7 +1,6 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { uploadFile, deleteFile, extractFilePathFromUrl } from '@/lib/storageUtils';
 
 export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
@@ -18,34 +17,39 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
             );
         }
 
-        const body = await request.json();
+        const formData = await request.formData();
 
-        const {
-            title,
-            description,
-            location,
-            startDate,
-            endDate,
-            image,
-            status,
-        } = body;
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+        const location = formData.get('location') as string;
+        const startDate = formData.get('startDate') as string;
+        const endDate = formData.get('endDate') as string | null;
+        const image = formData.get('image') as File | null;
+        const status = formData.get('status') as string;
 
-        
+        let imageUrl: string | null = null;
 
-        let imagePath: string | null = null;
-
+        // Upload image baru ke Supabase Storage jika ada
         if (image && image.size > 0) {
-            const bytes = await image.arrayBuffer();
-            const buffer = Buffer.from(bytes);
+            // Hapus gambar lama jika ada
+            if (find_data.image) {
+                const oldFilePath = extractFilePathFromUrl(find_data.image, 'events');
+                if (oldFilePath) {
+                    await deleteFile('events', oldFilePath);
+                }
+            }
 
-            const uploadDir = path.join(process.cwd(), "public", "uploads", "events");
-            await mkdir(uploadDir, { recursive: true });
+            // Upload gambar baru
+            const uploadResult = await uploadFile('events', image);
 
-            const fileName = `${Date.now()}-${image.name}`;
-            const filePath = path.join(uploadDir, fileName);
+            if (!uploadResult.success) {
+                return NextResponse.json(
+                    { message: `Error uploading image: ${uploadResult.error}` },
+                    { status: 500 }
+                );
+            }
 
-            await writeFile(filePath, buffer);
-            imagePath = `/uploads/events/${fileName}`;
+            imageUrl = uploadResult.publicUrl || null;
         }
 
         const updateData: any = {
@@ -57,8 +61,8 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
             status: status as any,
         };
 
-        if (imagePath) {
-            updateData.image = imagePath;
+        if (imageUrl) {
+            updateData.image = imageUrl;
         }
 
         const update_data = await getPrisma.event.update({
@@ -96,6 +100,14 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
             );
         }
 
+        // Hapus gambar dari Supabase Storage jika ada
+        if (find_data.image) {
+            const filePath = extractFilePathFromUrl(find_data.image, 'events');
+            if (filePath) {
+                await deleteFile('events', filePath);
+            }
+        }
+
         const delete_data = await getPrisma.event.delete({
             where: { id: parseInt(id) }
         })
@@ -118,7 +130,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
 export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await ctx.params;
-        
+
         const event = await getPrisma.event.findUnique({
             where: { id: parseInt(id) },
             select: {
