@@ -1,7 +1,6 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { uploadFile } from '@/lib/storageUtils';
 
 export async function POST(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
@@ -30,24 +29,24 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
             );
         }
 
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        // Upload file ke Supabase Storage
+        const uploadResult = await uploadFile('businesses', file);
 
-        const uploadDir = path.join(process.cwd(), "public", "uploads", "businesses");
-        await mkdir(uploadDir, { recursive: true });
+        if (!uploadResult.success) {
+            return NextResponse.json(
+                { message: `Error uploading media: ${uploadResult.error}` },
+                { status: 500 }
+            );
+        }
 
-        const fileName = `${Date.now()}-${file.name}`;
-        const filePath = path.join(uploadDir, fileName);
-
-        await writeFile(filePath, buffer);
-        const mediaPath = `/uploads/businesses/${fileName}`;
+        const mediaUrl = uploadResult.publicUrl || null;
 
         const newGallery = await getPrisma.businessGallery.create({
             data: {
                 businessId: parseInt(id),
                 title: title || null,
                 description: description || null,
-                media: mediaPath,
+                media: mediaUrl,
             },
         });
 

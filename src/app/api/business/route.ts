@@ -1,21 +1,21 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
+import { uploadFile } from '@/lib/storageUtils';
 
 export async function POST(request: NextRequest) {
     try {
-        
-        const body = await request.json();
-        const {
-            type,
-            status,
-            name,
-            ownerName,
-            phoneNumber,
-            description,
-            minimumPrice,
-            maximumPrice,
-            address,
-        } = body;
+        const formData = await request.formData();
+
+        const type = formData.get('type') as string;
+        const status = formData.get('status') as string;
+        const name = formData.get('name') as string;
+        const ownerName = formData.get('ownerName') as string;
+        const phoneNumber = formData.get('phoneNumber') as string;
+        const description = formData.get('description') as string;
+        const minimumPrice = formData.get('minimumPrice') as string;
+        const maximumPrice = formData.get('maximumPrice') as string;
+        const address = formData.get('address') as string;
+        const images = formData.getAll('images') as File[];
 
         if (!type || !name || !ownerName || !phoneNumber || !description || !address) {
             return NextResponse.json(
@@ -37,6 +37,26 @@ export async function POST(request: NextRequest) {
                 status: status as any || 'PENDING',
             },
         });
+
+        // Upload images ke Supabase Storage dan buat gallery entries
+        if (images && images.length > 0) {
+            for (const image of images) {
+                if (image && image.size > 0) {
+                    const uploadResult = await uploadFile('businesses', image);
+
+                    if (uploadResult.success && uploadResult.publicUrl) {
+                        await getPrisma.businessGallery.create({
+                            data: {
+                                businessId: newBusiness.id,
+                                media: uploadResult.publicUrl,
+                                title: null,
+                                description: null,
+                            },
+                        });
+                    }
+                }
+            }
+        }
 
         return NextResponse.json({
             message: "Business created successfully",
@@ -60,11 +80,11 @@ export async function GET(request: NextRequest) {
         const type = searchParams.get('type');
 
         const whereClause: any = {};
-        
+
         if (status) {
             whereClause.status = status;
         }
-        
+
         if (type) {
             whereClause.type = type;
         }

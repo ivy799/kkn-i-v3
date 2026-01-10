@@ -117,7 +117,7 @@ model BusinessGallery {
   media       String?
   createdAt   DateTime? @default(now()) @map("created_at")
 
-  business Business @relation(fields: [businessId], references: [id])
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@map("business_gallery")
 }
