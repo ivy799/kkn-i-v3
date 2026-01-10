@@ -17,22 +17,20 @@ export function Navbar({ user }: NavbarProps) {
     { title: "Berita", url: "/articles" },
     { title: "Galeri", url: "/gallery" },
     { title: "Event", url: "/events" },
-    { title: "UMKM", url: "/businesses" },
-    { title: "Wisata", url: "/tourism" },
   ]
 
   const authConfig = user
     ? {
-        login: {
-          text: user.role === "ADMIN" ? "Dashboard" : user.username,
-          url: user.role === "ADMIN" ? "/dashboard" : "#",
-        },
-        signup: { text: "Keluar", url: "/api/auth/signout" },
-      }
+      login: {
+        text: user.role === "ADMIN" ? "Dashboard" : user.username,
+        url: user.role === "ADMIN" ? "/dashboard" : "#",
+      },
+      signup: { text: "Keluar", url: "/api/auth/signout" },
+    }
     : {
-        login: { text: "Masuk", url: "/auth/signin" },
-        signup: { text: "Daftar", url: "/auth/signup" },
-      }
+      login: { text: "Masuk", url: "/auth/signin" },
+      signup: { text: "Daftar", url: "/auth/signup" },
+    }
 
   return (
     <Navbar1
