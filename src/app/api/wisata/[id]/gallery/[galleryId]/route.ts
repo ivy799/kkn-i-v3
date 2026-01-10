@@ -1,15 +1,16 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
+import { deleteFile, extractFilePathFromUrl } from '@/lib/storageUtils';
 
 export async function DELETE(
-    _req: NextRequest, 
+    _req: NextRequest,
     ctx: { params: Promise<{ id: string; galleryId: string }> }
 ) {
     try {
         const { id, galleryId } = await ctx.params;
 
         const gallery = await getPrisma.tourismSpotGallery.findFirst({
-            where: { 
+            where: {
                 id: parseInt(galleryId),
                 tourismSpotId: parseInt(id)
             }
@@ -20,6 +21,14 @@ export async function DELETE(
                 { message: 'Gallery not found' },
                 { status: 404 }
             );
+        }
+
+        // Hapus media dari Supabase Storage jika ada
+        if (gallery.media) {
+            const filePath = extractFilePathFromUrl(gallery.media, 'tourism');
+            if (filePath) {
+                await deleteFile('tourism', filePath);
+            }
         }
 
         await getPrisma.tourismSpotGallery.delete({

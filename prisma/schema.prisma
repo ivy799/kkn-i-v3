@@ -123,15 +123,15 @@ model BusinessGallery {
 }
 
 model TourismSpot {
-  id            Int       @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   name          String?
-  description   String?   @db.Text
+  description   String? @db.Text
   address       String?
-  mapUrl        String?   @map("map_url")
-  ticketPrice   Int?      @map("ticket_price")
-  openingHours  DateTime? @map("opening_hours") @db.Time()
-  closingHours  DateTime? @map("closing_hours") @db.Time()
-  contactPerson String?   @map("contact_person")
+  mapUrl        String? @map("map_url")
+  ticketPrice   Int?    @map("ticket_price")
+  openingHours  String? @map("opening_hours")
+  closingHours  String? @map("closing_hours")
+  contactPerson String? @map("contact_person")
 
   TourismSpotGallery  TourismSpotGallery[]
   TourismSpotFacility TourismSpotFacility[]

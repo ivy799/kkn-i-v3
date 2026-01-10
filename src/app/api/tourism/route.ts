@@ -1,12 +1,11 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { uploadFile } from '@/lib/storageUtils';
 
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
-        
+
         const name = formData.get("name") as string;
         const description = formData.get("description") as string;
         const address = formData.get("address") as string;
@@ -37,27 +36,20 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        if (images.length > 0) {
-            const uploadDir = path.join(process.cwd(), "public", "uploads", "tourism");
-            await mkdir(uploadDir, { recursive: true });
-
+        // Upload images ke Supabase Storage dan buat gallery entries
+        if (images && images.length > 0) {
             for (const image of images) {
-                if (image.size > 0) {
-                    const bytes = await image.arrayBuffer();
-                    const buffer = Buffer.from(bytes);
+                if (image && image.size > 0) {
+                    const uploadResult = await uploadFile('tourism', image);
 
-                    const fileName = `${Date.now()}-${image.name}`;
-                    const filePath = path.join(uploadDir, fileName);
-
-                    await writeFile(filePath, buffer);
-                    const mediaPath = `/uploads/tourism/${fileName}`;
-
-                    await getPrisma.tourismSpotGallery.create({
-                        data: {
-                            tourismSpotId: newTourismSpot.id,
-                            media: mediaPath,
-                        },
-                    });
+                    if (uploadResult.success && uploadResult.publicUrl) {
+                        await getPrisma.tourismSpotGallery.create({
+                            data: {
+                                tourismSpotId: newTourismSpot.id,
+                                media: uploadResult.publicUrl,
+                            },
+                        });
+                    }
                 }
             }
         }
