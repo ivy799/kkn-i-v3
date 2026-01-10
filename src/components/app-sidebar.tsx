@@ -66,7 +66,7 @@ const data = {
     },
     {
       name: "Pengaturan",
-      url: "#",
+      url: "/dashboard/pengaturan",
       icon: IconSettings,
     },
   ],
