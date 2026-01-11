@@ -12,7 +12,7 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({
-    title = "Desa Wisata Tista",
+    title = "Desa Wisata Bonto Lojong",
     subtitle = "Desa Wisata indah yang sejuk dan asri",
     ctaText = "RESERVASI SEKARANG",
     ctaUrl = "#",

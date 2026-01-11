@@ -1,0 +1,292 @@
+import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import { uploadFile } from '../src/lib/storageUtils';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const connectionString = process.env.DATABASE_URL!;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
+const prisma = new PrismaClient({ adapter });
+
+// Helper function to upload image from public folder
+async function uploadImageFromPublic(imagePath: string, bucket: string): Promise<string | null> {
+    try {
+        const fullPath = path.join(process.cwd(), 'public', imagePath);
+
+        if (!fs.existsSync(fullPath)) {
+            console.error(`Image not found: ${fullPath}`);
+            return null;
+        }
+
+        const fileBuffer = fs.readFileSync(fullPath);
+        const fileName = path.basename(imagePath);
+        const mimeType = fileName.endsWith('.jpeg') || fileName.endsWith('.jpg')
+            ? 'image/jpeg'
+            : fileName.endsWith('.png')
+                ? 'image/png'
+                : 'image/jpeg';
+
+        // Create a File-like object from buffer
+        const file = new File([fileBuffer], fileName, { type: mimeType });
+
+        const uploadResult = await uploadFile(bucket, file);
+
+        if (uploadResult.success && uploadResult.publicUrl) {
+            console.log(`✓ Uploaded: ${fileName} -> ${uploadResult.publicUrl}`);
+            return uploadResult.publicUrl;
+        } else {
+            console.error(`✗ Failed to upload ${fileName}:`, uploadResult.error);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error uploading image ${imagePath}:`, error);
+        return null;
+    }
+}
+
+async function main() {
+    console.log('Starting seeding...');
+
+    // // Clear existing data
+    // await prisma.tourismSpotGallery.deleteMany({});
+    // await prisma.tourismSpotFacility.deleteMany({});
+    // await prisma.tourismSpot.deleteMany({});
+
+    // Seed Tourism Spots
+    console.log('\n📍 Creating Tourism Spot 1: Pantai Indah Kapuk...');
+    const tourismSpot1 = await prisma.tourismSpot.create({
+        data: {
+            name: 'Pantai Indah Kapuk',
+            description: 'Pantai yang indah dengan pemandangan sunset yang menakjubkan. Tempat yang sempurna untuk bersantai bersama keluarga dan menikmati keindahan alam.',
+            address: 'Jl. Pantai Indah No. 123, Desa Wisata',
+            mapUrl: 'https://maps.google.com/?q=-6.2088,106.8456',
+            ticketPrice: 15000,
+            openingHours: '08:00',
+            closingHours: '18:00',
+            contactPerson: '081234567890',
+            TourismSpotFacility: {
+                create: [
+                    {
+                        name: 'Area Parkir',
+                        description: 'Area parkir luas untuk kendaraan roda dua dan roda empat',
+                    },
+                    {
+                        name: 'Toilet Umum',
+                        description: 'Fasilitas toilet yang bersih dan terawat',
+                    },
+                    {
+                        name: 'Warung Makan',
+                        description: 'Tersedia berbagai warung makan dengan menu lokal',
+                    },
+                ],
+            },
+        },
+    });
+
+    // Upload images for Tourism Spot 1
+    console.log('  📸 Uploading images...');
+    const image1 = await uploadImageFromPublic('img/img-01.jpeg', 'tourism');
+    if (image1) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot1.id,
+                title: 'Pemandangan Pantai',
+                description: 'Pemandangan pantai yang indah di sore hari',
+                media: image1,
+            },
+        });
+    }
+
+    const image2 = await uploadImageFromPublic('img/img-02.jpeg', 'tourism');
+    if (image2) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot1.id,
+                title: 'Sunset di Pantai',
+                description: 'Matahari terbenam yang menakjubkan',
+                media: image2,
+            },
+        });
+    }
+    console.log('  ✓ Tourism Spot 1 created successfully!\n');
+
+
+    // Tourism Spot 2
+    console.log('📍 Creating Tourism Spot 2: Air Terjun Pelangi...');
+    const tourismSpot2 = await prisma.tourismSpot.create({
+        data: {
+            name: 'Air Terjun Pelangi',
+            description: 'Air terjun yang spektakuler dengan ketinggian 50 meter. Airnya yang jernih dan suasana yang sejuk membuat tempat ini sangat cocok untuk refreshing.',
+            address: 'Jl. Gunung Hijau No. 45, Desa Wisata',
+            mapUrl: 'https://maps.google.com/?q=-6.2188,106.8556',
+            ticketPrice: 20000,
+            openingHours: '07:00',
+            closingHours: '17:00',
+            contactPerson: '081234567891',
+            TourismSpotFacility: {
+                create: [
+                    {
+                        name: 'Gazebo',
+                        description: 'Gazebo untuk beristirahat dan menikmati pemandangan',
+                    },
+                    {
+                        name: 'Jalur Trekking',
+                        description: 'Jalur trekking yang aman menuju air terjun',
+                    },
+                    {
+                        name: 'Area Piknik',
+                        description: 'Area piknik dengan meja dan bangku',
+                    },
+                ],
+            },
+        },
+    });
+
+    console.log('  📸 Uploading images...');
+    const image3 = await uploadImageFromPublic('img/img-03.jpeg', 'tourism');
+    if (image3) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot2.id,
+                title: 'Air Terjun Utama',
+                description: 'Pemandangan air terjun dari bawah',
+                media: image3,
+            },
+        });
+    }
+
+    const image4 = await uploadImageFromPublic('img/img-04.jpeg', 'tourism');
+    if (image4) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot2.id,
+                title: 'Kolam Alami',
+                description: 'Kolam alami di bawah air terjun',
+                media: image4,
+            },
+        });
+    }
+    console.log('  ✓ Tourism Spot 2 created successfully!\n');
+
+    // Tourism Spot 3
+    console.log('📍 Creating Tourism Spot 3: Taman Bunga Nusantara...');
+    const tourismSpot3 = await prisma.tourismSpot.create({
+        data: {
+            name: 'Taman Bunga Nusantara',
+            description: 'Taman bunga seluas 5 hektar dengan berbagai jenis bunga dari seluruh nusantara. Tempat yang sempurna untuk fotografi dan wisata edukasi.',
+            address: 'Jl. Bunga Raya No. 78, Desa Wisata',
+            mapUrl: 'https://maps.google.com/?q=-6.2288,106.8656',
+            ticketPrice: 25000,
+            openingHours: '08:00',
+            closingHours: '17:00',
+            contactPerson: '081234567892',
+            TourismSpotFacility: {
+                create: [
+                    {
+                        name: 'Mushola',
+                        description: 'Mushola untuk beribadah',
+                    },
+                    {
+                        name: 'Kafe',
+                        description: 'Kafe dengan pemandangan taman',
+                    },
+                    {
+                        name: 'Toko Souvenir',
+                        description: 'Toko souvenir dengan berbagai produk lokal',
+                    },
+                    {
+                        name: 'Area Bermain Anak',
+                        description: 'Area bermain yang aman untuk anak-anak',
+                    },
+                ],
+            },
+        },
+    });
+
+    console.log('  📸 Uploading images...');
+    const image5 = await uploadImageFromPublic('img/img-05.jpeg', 'tourism');
+    if (image5) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot3.id,
+                title: 'Taman Bunga',
+                description: 'Berbagai jenis bunga yang indah',
+                media: image5,
+            },
+        });
+    }
+
+    const image6 = await uploadImageFromPublic('img/img-06.jpeg', 'tourism');
+    if (image6) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot3.id,
+                title: 'Spot Foto',
+                description: 'Spot foto favorit pengunjung',
+                media: image6,
+            },
+        });
+    }
+    console.log('  ✓ Tourism Spot 3 created successfully!\n');
+
+    // Tourism Spot 4
+    console.log('📍 Creating Tourism Spot 4: Bukit Matahari...');
+    const tourismSpot4 = await prisma.tourismSpot.create({
+        data: {
+            name: 'Bukit Matahari',
+            description: 'Bukit dengan pemandangan 360 derajat yang menakjubkan. Tempat terbaik untuk melihat sunrise dan sunset. Cocok untuk camping dan hiking.',
+            address: 'Jl. Puncak Indah No. 12, Desa Wisata',
+            mapUrl: 'https://maps.google.com/?q=-6.2388,106.8756',
+            ticketPrice: 10000,
+            openingHours: '05:00',
+            closingHours: '19:00',
+            contactPerson: '081234567893',
+            TourismSpotFacility: {
+                create: [
+                    {
+                        name: 'Area Camping',
+                        description: 'Area camping dengan fasilitas lengkap',
+                    },
+                    {
+                        name: 'Pos Keamanan',
+                        description: 'Pos keamanan 24 jam',
+                    },
+                    {
+                        name: 'Jalur Pendakian',
+                        description: 'Jalur pendakian yang terawat dengan baik',
+                    },
+                ],
+            },
+        },
+    });
+
+    console.log('  📸 Uploading images...');
+    const image7 = await uploadImageFromPublic('img/img-07.jpeg', 'tourism');
+    if (image7) {
+        await prisma.tourismSpotGallery.create({
+            data: {
+                tourismSpotId: tourismSpot4.id,
+                title: 'Pemandangan dari Puncak',
+                description: 'Pemandangan spektakuler dari puncak bukit',
+                media: image7,
+            },
+        });
+    }
+    console.log('  ✓ Tourism Spot 4 created successfully!\n');
+
+    console.log('Seeding completed successfully!');
+    console.log(`Created 4 tourism spots with galleries and facilities`);
+}
+
+main()
+    .catch((e) => {
+        console.error('Error seeding database:', e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });
