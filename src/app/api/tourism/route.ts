@@ -71,7 +71,43 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
     try {
+        const { searchParams } = new URL(request.url);
+        const search = searchParams.get('search') || '';
+        const priceMin = searchParams.get('priceMin');
+        const priceMax = searchParams.get('priceMax');
+        const facilities = searchParams.get('facilities')?.split(',').filter(Boolean) || [];
+
+        // Build where clause for filtering
+        const where: any = {};
+
+        // Search filter (name or description)
+        if (search) {
+            where.OR = [
+                { name: { contains: search, mode: 'insensitive' } },
+                { description: { contains: search, mode: 'insensitive' } },
+            ];
+        }
+
+        // Price range filter
+        if (priceMin || priceMax) {
+            where.ticketPrice = {};
+            if (priceMin) where.ticketPrice.gte = parseInt(priceMin);
+            if (priceMax) where.ticketPrice.lte = parseInt(priceMax);
+        }
+
+        // Facilities filter
+        if (facilities.length > 0) {
+            where.TourismSpotFacility = {
+                some: {
+                    name: {
+                        in: facilities
+                    }
+                }
+            };
+        }
+
         const tourismSpots = await getPrisma.tourismSpot.findMany({
+            where,
             select: {
                 id: true,
                 name: true,
@@ -82,6 +118,22 @@ export async function GET(request: NextRequest) {
                 openingHours: true,
                 closingHours: true,
                 contactPerson: true,
+                TourismSpotGallery: {
+                    select: {
+                        id: true,
+                        media: true,
+                        title: true,
+                        description: true,
+                    },
+                    take: 1,
+                },
+                TourismSpotFacility: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true,
+                    },
+                },
             },
             orderBy: {
                 id: 'desc'
