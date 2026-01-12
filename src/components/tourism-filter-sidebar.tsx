@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Search, X, SlidersHorizontal } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -37,16 +37,38 @@ export function TourismFilterSidebar({
     totalResults,
 }: TourismFilterSidebarProps) {
     const [localFilters, setLocalFilters] = useState<FilterState>(filters)
+    const [searchInput, setSearchInput] = useState(filters.search)
+    const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
     useEffect(() => {
         setLocalFilters(filters)
+        setSearchInput(filters.search)
     }, [filters])
 
-    const handleSearchChange = (value: string) => {
-        const newFilters = { ...localFilters, search: value }
-        setLocalFilters(newFilters)
-        onFilterChange(newFilters)
-    }
+    // Cleanup debounce on unmount
+    useEffect(() => {
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current)
+            }
+        }
+    }, [])
+
+    const handleSearchChange = useCallback((value: string) => {
+        // Update input immediately for responsive UI
+        setSearchInput(value)
+
+        // Debounce the filter change
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current)
+        }
+
+        debounceRef.current = setTimeout(() => {
+            const newFilters = { ...localFilters, search: value }
+            setLocalFilters(newFilters)
+            onFilterChange(newFilters)
+        }, 300) // 300ms delay after user stops typing
+    }, [localFilters, onFilterChange])
 
     const handlePriceChange = (field: 'priceMin' | 'priceMax', value: string) => {
         const newFilters = { ...localFilters, [field]: value }
@@ -71,6 +93,7 @@ export function TourismFilterSidebar({
             priceMax: '',
             facilities: [],
         }
+        setSearchInput('')
         setLocalFilters(clearedFilters)
         onFilterChange(clearedFilters)
     }
@@ -94,7 +117,7 @@ export function TourismFilterSidebar({
                         id="search"
                         type="text"
                         placeholder="Cari nama atau deskripsi..."
-                        value={localFilters.search}
+                        value={searchInput}
                         onChange={(e) => handleSearchChange(e.target.value)}
                         className="pl-9 bg-background/50 border-border/50 focus:border-primary transition-colors"
                     />
