@@ -14,7 +14,6 @@ export function Navbar({ user }: NavbarProps) {
   const menuItems = [
     { title: "Beranda", url: "/" },
     { title: "Profil Desa", url: "/profile" },
-    { title: "Berita", url: "/articles" },
     { title: "Galeri", url: "/gallery" },
     { title: "Event", url: "/events" },
     { title: "Wisata", url: "/wisata" },
