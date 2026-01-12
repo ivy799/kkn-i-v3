@@ -81,17 +81,18 @@ export default function GalleryPage() {
         }
     }
 
-    // Bento grid pattern - determines size based on index
+    // Bento grid pattern - \etermines size based on index (no row-span to avoid gaps)
     const getGridClass = (index: number) => {
         const patterns = [
-            "md:col-span-2 md:row-span-2 h-[180px] md:h-[420px]", // 0: Large
-            "md:col-span-1 md:row-span-1 h-[180px] md:h-[200px]", // 1: Small
-            "md:col-span-1 md:row-span-2 h-[180px] md:h-[420px]", // 2: Tall
-            "md:col-span-2 md:row-span-1 h-[180px] md:h-[200px]", // 3: Wide
-            "md:col-span-1 md:row-span-1 h-[180px] md:h-[200px]", // 4: Small
-            "md:col-span-1 md:row-span-1 h-[180px] md:h-[200px]", // 5: Small
-            "md:col-span-2 md:row-span-1 h-[180px] md:h-[200px]", // 6: Wide
-            "md:col-span-1 md:row-span-2 h-[180px] md:h-[420px]", // 7: Tall
+            "col-span-1 md:col-span-2 h-[200px] md:h-[300px]", // 0: Wide
+            "col-span-1 md:col-span-1 h-[200px] md:h-[300px]", // 1: Small
+            "col-span-1 md:col-span-1 h-[200px] md:h-[300px]", // 2: Small
+            "col-span-1 md:col-span-1 h-[200px] md:h-[250px]", // 3: Small
+            "col-span-1 md:col-span-2 h-[200px] md:h-[250px]", // 4: Wide
+            "col-span-1 md:col-span-1 h-[200px] md:h-[250px]", // 5: Small
+            "col-span-1 md:col-span-1 h-[200px] md:h-[280px]", // 6: Small
+            "col-span-1 md:col-span-1 h-[200px] md:h-[280px]", // 7: Small
+            "col-span-1 md:col-span-2 h-[200px] md:h-[280px]", // 8: Wide
         ]
         return patterns[index % patterns.length]
     }

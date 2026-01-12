@@ -17,6 +17,8 @@ export function Navbar({ user }: NavbarProps) {
     { title: "Berita", url: "/articles" },
     { title: "Galeri", url: "/gallery" },
     { title: "Event", url: "/events" },
+    { title: "Wisata", url: "/wisata" },
+    { title: "UMKM", url: "/business" },
   ]
 
   const authConfig = user
