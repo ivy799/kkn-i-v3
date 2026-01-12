@@ -278,8 +278,124 @@ async function main() {
     }
     console.log('  ✓ Tourism Spot 4 created successfully!\n');
 
+    // ==================== EVENTS SEEDING ====================
+    console.log('\n📅 Starting Events Seeding...\n');
+
+    // Event 1 - Completed (past)
+    console.log('📅 Creating Event 1: Festival Budaya Desa...');
+    const eventImage1 = await uploadImageFromPublic('img/img-01.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Festival Budaya Desa',
+            description: 'Festival tahunan yang menampilkan berbagai kesenian dan budaya lokal desa. Acara ini menghadirkan pertunjukan tari tradisional, musik gamelan, dan pameran kerajinan tangan.',
+            location: 'Lapangan Desa Wisata',
+            startDate: new Date('2025-12-15'),
+            endDate: new Date('2025-12-17'),
+            image: eventImage1,
+            status: 'COMPLETED',
+        },
+    });
+    console.log('  ✓ Event 1 created!\n');
+
+    // Event 2 - Completed (past)
+    console.log('📅 Creating Event 2: Gotong Royong Bersih Desa...');
+    const eventImage2 = await uploadImageFromPublic('img/img-02.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Gotong Royong Bersih Desa',
+            description: 'Kegiatan gotong royong rutin untuk membersihkan lingkungan desa. Seluruh warga diajak untuk berpartisipasi menjaga kebersihan dan keindahan desa.',
+            location: 'Seluruh Area Desa',
+            startDate: new Date('2026-01-05'),
+            endDate: new Date('2026-01-05'),
+            image: eventImage2,
+            status: 'COMPLETED',
+        },
+    });
+    console.log('  ✓ Event 2 created!\n');
+
+    // Event 3 - Ongoing (current)
+    console.log('📅 Creating Event 3: Pasar Rakyat Mingguan...');
+    const eventImage3 = await uploadImageFromPublic('img/img-03.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Pasar Rakyat Mingguan',
+            description: 'Pasar tradisional mingguan yang menjual berbagai produk lokal, hasil pertanian, dan kerajinan tangan warga desa. Berlangsung setiap hari Minggu.',
+            location: 'Halaman Balai Desa',
+            startDate: new Date('2026-01-12'),
+            endDate: new Date('2026-01-12'),
+            image: eventImage3,
+            status: 'ONGOING',
+        },
+    });
+    console.log('  ✓ Event 3 created!\n');
+
+    // Event 4 - Upcoming
+    console.log('📅 Creating Event 4: Pelatihan UMKM Digital...');
+    const eventImage4 = await uploadImageFromPublic('img/img-04.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Pelatihan UMKM Digital',
+            description: 'Pelatihan pemasaran digital untuk pelaku UMKM desa. Materi meliputi cara berjualan online, pembuatan konten, dan pengelolaan media sosial.',
+            location: 'Aula Balai Desa',
+            startDate: new Date('2026-01-20'),
+            endDate: new Date('2026-01-22'),
+            image: eventImage4,
+            status: 'UPCOMING',
+        },
+    });
+    console.log('  ✓ Event 4 created!\n');
+
+    // Event 5 - Upcoming
+    console.log('📅 Creating Event 5: Musyawarah Desa...');
+    const eventImage5 = await uploadImageFromPublic('img/img-05.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Musyawarah Desa',
+            description: 'Musyawarah rutin warga desa untuk membahas program pembangunan dan pengembangan desa. Seluruh warga diundang untuk hadir dan memberikan aspirasi.',
+            location: 'Balai Desa',
+            startDate: new Date('2026-01-25'),
+            endDate: new Date('2026-01-25'),
+            image: eventImage5,
+            status: 'UPCOMING',
+        },
+    });
+    console.log('  ✓ Event 5 created!\n');
+
+    // Event 6 - Upcoming
+    console.log('📅 Creating Event 6: Panen Raya Desa...');
+    const eventImage6 = await uploadImageFromPublic('img/img-06.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Panen Raya Desa',
+            description: 'Perayaan panen raya hasil pertanian desa. Acara ini dimeriahkan dengan berbagai lomba, bazaar makanan tradisional, dan pertunjukan seni.',
+            location: 'Sawah Terasering Desa',
+            startDate: new Date('2026-02-10'),
+            endDate: new Date('2026-02-12'),
+            image: eventImage6,
+            status: 'UPCOMING',
+        },
+    });
+    console.log('  ✓ Event 6 created!\n');
+
+    // Event 7 - Upcoming
+    console.log('📅 Creating Event 7: Lomba Desa Wisata...');
+    const eventImage7 = await uploadImageFromPublic('img/img-07.jpeg', 'events');
+    await prisma.event.create({
+        data: {
+            title: 'Lomba Desa Wisata',
+            description: 'Kompetisi antar RT dalam rangka memperingati HUT Desa. Berbagai lomba seperti kebersihan lingkungan, kreativitas, dan gotong royong akan dinilai oleh juri.',
+            location: 'Seluruh Area Desa',
+            startDate: new Date('2026-02-25'),
+            endDate: new Date('2026-02-28'),
+            image: eventImage7,
+            status: 'UPCOMING',
+        },
+    });
+    console.log('  ✓ Event 7 created!\n');
+
     console.log('Seeding completed successfully!');
     console.log(`Created 4 tourism spots with galleries and facilities`);
+    console.log(`Created 7 events`);
 }
 
 main()

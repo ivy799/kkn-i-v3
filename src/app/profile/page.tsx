@@ -97,76 +97,17 @@ export default function ProfilePage() {
                     alt="Desa"
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />
-            </section>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
 
-            {/* Content Section - Map and Text */}
-            <section ref={profileRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                    {/* Map Section */}
-                    <div className={`w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg transition-all duration-1000 ${isProfileVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-                        }`}>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862248!2d107.57311709999999!3d-6.903444399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
-                            width="100%"
-                            height="100%"
-                            style={{ border: 0 }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            title="Peta Desa"
-                        />
-                    </div>
-
-                    {/* Text Description Section */}
-                    <div className={`flex flex-col justify-center space-y-6 transition-all duration-1000 delay-300 ${isProfileVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
-                        }`}>
-                        <div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-                                Profil Desa
-                            </h1>
-                            <div className="w-20 h-1 bg-blue-600 mb-6" />
-                        </div>
-
-                        <div className="space-y-4 text-gray-700 leading-relaxed">
-                            <p className="text-lg md:text-xl">
-                                Desa kami adalah sebuah komunitas yang kaya akan budaya dan tradisi.
-                                Terletak di wilayah yang strategis, desa ini memiliki potensi besar
-                                dalam berbagai sektor.
-                            </p>
-
-                            <p className="text-base md:text-lg">
-                                Kami bertekad untuk terus berkembang dan berinovasi, dengan tetap
-                                menjaga nilai-nilai luhur yang telah diwariskan oleh para pendahulu.
-                                Melalui kerja sama dan gotong royong, kami membangun masa depan yang
-                                lebih baik untuk generasi mendatang.
-                            </p>
-
-                            <p className="text-base md:text-lg">
-                                Dengan sumber daya alam yang melimpah dan masyarakat yang solid,
-                                desa kami terus berupaya meningkatkan kesejahteraan warga melalui
-                                berbagai program pembangunan dan pemberdayaan masyarakat.
-                            </p>
-                        </div>
-
-                        <div className="pt-4">
-                            <div className="inline-flex items-center space-x-2 text-blue-600 font-semibold">
-                                <span>Pelajari lebih lanjut</span>
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M9 5l7 7-7 7"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
+                {/* Hero Text Content */}
+                <div className="absolute inset-0 flex flex-col justify-center container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-2xl lg:max-w-3xl">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 md:mb-6 leading-tight drop-shadow-lg">
+                            Profil Desa
+                        </h1>
+                        <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-xl drop-shadow-md">
+                            Kenali lebih dekat desa wisata kami yang kaya akan budaya dan keindahan alam
+                        </p>
                     </div>
                 </div>
             </section>
@@ -226,6 +167,77 @@ export default function ProfilePage() {
                         <p>
                             Sebelum 2007 terjadi kevakuman pengelolaan saat setelah terjadi gempa 26 Mei 2006 hingga ditahun 2007, dan karang taruna mulai lagi muncul kepermukaan untuk melakukan pengelolaan kawasan wisata dengan pendampingan dari dinas Budpar Gunungkidul sejak tahun 2007. Dibuatlah kesepakatan bersama untuk mengelola kawasan wisata dengan membentuk kelompok sadar wisata yang diberi nama Kelompok Sadar Wisata (Pokdarwis) Nglanggeran pada tanggal 12 Desember 2007.
                         </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Content Section - Map and Text */}
+            <section ref={profileRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    {/* Map Section */}
+                    <div className={`w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg transition-all duration-1000 ${isProfileVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+                        }`}>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862248!2d107.57311709999999!3d-6.903444399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="Peta Desa"
+                        />
+                    </div>
+
+                    {/* Text Description Section */}
+                    <div className={`flex flex-col justify-center space-y-6 transition-all duration-1000 delay-300 ${isProfileVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+                        }`}>
+                        <div>
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
+                                Lokasi Desa
+                            </h2>
+                            <div className="w-20 h-1 bg-blue-600 mb-6" />
+                        </div>
+
+                        <div className="space-y-4 text-gray-700 leading-relaxed">
+                            <p className="text-lg md:text-xl">
+                                Desa kami adalah sebuah komunitas yang kaya akan budaya dan tradisi.
+                                Terletak di wilayah yang strategis, desa ini memiliki potensi besar
+                                dalam berbagai sektor.
+                            </p>
+
+                            <p className="text-base md:text-lg">
+                                Kami bertekad untuk terus berkembang dan berinovasi, dengan tetap
+                                menjaga nilai-nilai luhur yang telah diwariskan oleh para pendahulu.
+                                Melalui kerja sama dan gotong royong, kami membangun masa depan yang
+                                lebih baik untuk generasi mendatang.
+                            </p>
+
+                            <p className="text-base md:text-lg">
+                                Dengan sumber daya alam yang melimpah dan masyarakat yang solid,
+                                desa kami terus berupaya meningkatkan kesejahteraan warga melalui
+                                berbagai program pembangunan dan pemberdayaan masyarakat.
+                            </p>
+                        </div>
+
+                        <div className="pt-4">
+                            <div className="inline-flex items-center space-x-2 text-blue-600 font-semibold">
+                                <span>Pelajari lebih lanjut</span>
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 5l7 7-7 7"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
