@@ -2,78 +2,67 @@ import { HeroSection } from "@/components/hero-section";
 import { AboutSection } from "@/components/about-section";
 import { Gallery4 } from "@/components/gallery4";
 import { BentoGallery } from "@/components/bento-gallery";
+import { getPrisma } from "@/lib/prismaClient";
 
-export default function Home() {
-  const tourismItems = [
-    {
-      id: "wisata-1",
-      title: "Sawah Terasering Hijau",
-      description: "Nikmati keindahan sawah terasering yang hijau dan asri, pemandangan yang menenangkan jiwa dan cocok untuk fotografi.",
-      href: "/tourism/1",
-      image: "/img/img-01.jpeg",
+async function getTourismSpots() {
+  const spots = await getPrisma.tourismSpot.findMany({
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      TourismSpotGallery: {
+        select: {
+          media: true,
+        },
+        take: 1,
+      },
     },
-    {
-      id: "wisata-2",
-      title: "Pemandangan Alam Pegunungan",
-      description: "Jelajahi keindahan alam pegunungan dengan udara sejuk dan pemandangan yang memukau.",
-      href: "/tourism/2",
-      image: "/img/img-01.jpeg",
+    take: 5,
+    orderBy: {
+      id: 'asc',
     },
-    {
-      id: "wisata-3",
-      title: "Wisata Agro",
-      description: "Kunjungi kebun-kebun organik dan pelajari tentang pertanian berkelanjutan dari petani lokal.",
-      href: "/tourism/3",
-      image: "/img/img-01.jpeg",
-    },
-    {
-      id: "wisata-4",
-      title: "Spot Sunrise Terbaik",
-      description: "Saksikan matahari terbit yang spektakuler dari titik tertinggi desa kami.",
-      href: "/tourism/4",
-      image: "/img/img-01.jpeg",
-    },
-    {
-      id: "wisata-5",
-      title: "Trekking & Hiking",
-      description: "Jelajahi jalur trekking yang menantang dengan pemandangan alam yang luar biasa.",
-      href: "/tourism/5",
-      image: "/img/img-01.jpeg",
-    },
-  ];
+  });
 
-  const galleryItems = [
-    {
-      id: "gallery-1",
-      name: "Sawah Terasering Desa",
-      image: "/img/img-01.jpeg",
+  return spots.map((spot) => ({
+    id: `wisata-${spot.id}`,
+    title: spot.name || "Destinasi Wisata",
+    description: spot.description || "Jelajahi keindahan destinasi wisata ini.",
+    href: `/wisata/${spot.id}`,
+    image: spot.TourismSpotGallery[0]?.media || "/img/img-01.jpeg",
+  }));
+}
+
+async function getGalleryItems() {
+  const spots = await getPrisma.tourismSpot.findMany({
+    select: {
+      TourismSpotGallery: {
+        select: {
+          id: true,
+          title: true,
+          media: true,
+        },
+      },
     },
-    {
-      id: "gallery-2",
-      name: "Kegiatan Pertanian",
-      image: "/img/img-02.jpeg",
-    },
-    {
-      id: "gallery-3",
-      name: "Pemandangan Alam",
-      image: "/img/img-03.jpeg",
-    },
-    {
-      id: "gallery-4",
-      name: "Budaya Lokal",
-      image: "/img/img-01.jpeg",
-    },
-    {
-      id: "gallery-5",
-      name: "Produk UMKM",
-      image: "/img/img-02.jpeg",
-    },
-    {
-      id: "gallery-6",
-      name: "Wisata Desa",
-      image: "/img/img-03.jpeg",
-    },
-  ];
+  });
+
+  const allGalleryItems: { id: string; name: string; image: string }[] = [];
+
+  spots.forEach((spot) => {
+    spot.TourismSpotGallery.forEach((gallery) => {
+      allGalleryItems.push({
+        id: `gallery-${gallery.id}`,
+        name: gallery.title || "Galeri Desa",
+        image: gallery.media || "/img/img-01.jpeg",
+      });
+    });
+  });
+
+  return allGalleryItems.slice(0, 6);
+}
+
+export default async function Home() {
+  const tourismItems = await getTourismSpots();
+  const galleryItems = await getGalleryItems();
 
   return (
     <div className="min-h-screen">
