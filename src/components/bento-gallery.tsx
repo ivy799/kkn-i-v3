@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
@@ -33,17 +33,49 @@ export function BentoGallery({
     showMoreText = "Lihat Semua Galeri",
 }: BentoGalleryProps) {
     const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null)
+    const [isVisible, setIsVisible] = useState(false)
+    const sectionRef = useRef<HTMLElement>(null)
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
+            },
+            {
+                threshold: 0.1,
+                rootMargin: "0px 0px -100px 0px",
+            }
+        )
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current)
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current)
+            }
+        }
+    }, [])
 
     // Limit to 6 items for bento grid
     const displayItems = items.slice(0, 6)
 
     return (
-        <section className="w-full py-10 bg-gray-50">
+        <section ref={sectionRef} className="w-full py-10 bg-gray-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="text-center mb-12 md:mb-16">
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        {title}
+                <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 inline-block">
+                        <span className="relative">
+                            {title}
+                            <span
+                                className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isVisible ? 'w-full' : 'w-0'}`}
+                                style={{ transitionDelay: '500ms' }}
+                            />
+                        </span>
                     </h2>
                     <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                         {description}
@@ -51,7 +83,7 @@ export function BentoGallery({
                 </div>
 
                 {/* Bento Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] gap-4 mb-8">
+                <div className={`grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] gap-4 mb-8 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                     {displayItems.map((item, index) => {
                         // Define different sizes for bento grid layout
                         const gridClass =

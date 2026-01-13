@@ -122,8 +122,14 @@ export default function ProfilePage() {
                             }`}>
                             <div>
                                 <p className="text-gray-600 text-sm md:text-base mb-2">Sejarah</p>
-                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                                    Desa Bonto Lojong
+                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 inline-block">
+                                    <span className="relative">
+                                        Desa Bonto Lojong
+                                        <span
+                                            className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isHistoryVisible ? 'w-full' : 'w-0'}`}
+                                            style={{ transitionDelay: '300ms' }}
+                                        />
+                                    </span>
                                 </h2>
                             </div>
 
@@ -272,8 +278,14 @@ export default function ProfilePage() {
                     <div className={`flex flex-col justify-center space-y-6 transition-all duration-1000 delay-300 ${isProfileVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
                         }`}>
                         <div>
-                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-                                Lokasi Desa
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 inline-block">
+                                <span className="relative">
+                                    Lokasi Desa
+                                    <span
+                                        className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isProfileVisible ? 'w-full' : 'w-0'}`}
+                                        style={{ transitionDelay: '500ms' }}
+                                    />
+                                </span>
                             </h2>
                             <div className="w-20 h-1 bg-green-600 mb-6" />
                         </div>
@@ -328,8 +340,14 @@ export default function ProfilePage() {
                         {/* Vision */}
                         <div className={`flex flex-col justify-center transition-all duration-1000 ${isVisionVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
                             }`}>
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                                Visi
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 inline-block">
+                                <span className="relative">
+                                    Visi
+                                    <span
+                                        className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isVisionVisible ? 'w-full' : 'w-0'}`}
+                                        style={{ transitionDelay: '300ms' }}
+                                    />
+                                </span>
                             </h2>
 
                             <div className="bg-green-50 border-l-4 border-green-600 p-6 md:p-8 rounded-r-lg shadow-sm">
@@ -342,8 +360,14 @@ export default function ProfilePage() {
                         {/* Mission */}
                         <div className={`flex flex-col transition-all duration-1000 delay-300 ${isVisionVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
                             }`}>
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                                Misi
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 inline-block">
+                                <span className="relative">
+                                    Misi
+                                    <span
+                                        className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isVisionVisible ? 'w-full' : 'w-0'}`}
+                                        style={{ transitionDelay: '500ms' }}
+                                    />
+                                </span>
                             </h2>
 
                             <div className="space-y-6">

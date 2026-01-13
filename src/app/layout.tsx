@@ -7,7 +7,7 @@ import { getCurrentUser } from "@/lib/auth"
 import { headers } from "next/headers"
 
 export const metadata: Metadata = {
-  title: "KKN App",
+  title: "Desa Bonto Lojong",
   description: "Aplikasi KKN",
 };
 

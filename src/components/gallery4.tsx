@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
@@ -93,6 +93,32 @@ const Gallery4 = ({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!carouselApi) {
@@ -111,12 +137,18 @@ const Gallery4 = ({
   }, [carouselApi]);
 
   return (
-    <section className={cn("py-20", className)}>
+    <section ref={sectionRef} className={cn("py-20", className)}>
       <div className="container">
-        <div className="mb-8 flex items-end justify-between md:mb-14 lg:mb-16">
+        <div className={`mb-8 flex items-end justify-between md:mb-14 lg:mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}>
           <div className="flex flex-col gap-4">
-            <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">
-              {title}
+            <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl inline-block">
+              <span className="relative">
+                {title}
+                <span
+                  className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isVisible ? 'w-full' : 'w-0'}`}
+                  style={{ transitionDelay: '300ms' }}
+                />
+              </span>
             </h2>
             <p className="max-w-lg text-muted-foreground">{description}</p>
           </div>
@@ -146,7 +178,7 @@ const Gallery4 = ({
           </div>
         </div>
       </div>
-      <div className="w-full">
+      <div className={`w-full transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}>
         <Carousel
           setApi={setCarouselApi}
           opts={{

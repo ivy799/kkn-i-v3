@@ -68,8 +68,14 @@ export function AboutSection({
                             : reverse ? "opacity-0 translate-x-10" : "opacity-0 -translate-x-10"
                             }`}
                     >
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                            {title}
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight inline-block">
+                            <span className="relative">
+                                {title}
+                                <span
+                                    className={`absolute bottom-0 left-0 h-1 bg-green-500 transition-all duration-700 ease-out ${isVisible ? 'w-full' : 'w-0'}`}
+                                    style={{ transitionDelay: '300ms' }}
+                                />
+                            </span>
                         </h2>
 
                         <div className="space-y-4">

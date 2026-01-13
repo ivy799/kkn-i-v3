@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState } from "react"
 import { Search, X, SlidersHorizontal } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -36,73 +36,40 @@ export function TourismFilterSidebar({
     availableFacilities,
     totalResults,
 }: TourismFilterSidebarProps) {
-    const [localFilters, setLocalFilters] = useState<FilterState>(filters)
-    const [searchInput, setSearchInput] = useState(filters.search)
-    const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
-    useEffect(() => {
-        setLocalFilters(filters)
-        setSearchInput(filters.search)
-    }, [filters])
+    const handleSearchChange = (value: string) => {
+        onFilterChange({ ...filters, search: value })
+    }
 
-    // Cleanup debounce on unmount
-    useEffect(() => {
-        return () => {
-            if (debounceRef.current) {
-                clearTimeout(debounceRef.current)
-            }
-        }
-    }, [])
+    const handlePriceMinChange = (value: string) => {
+        onFilterChange({ ...filters, priceMin: value })
+    }
 
-    const handleSearchChange = useCallback((value: string) => {
-        // Update input immediately for responsive UI
-        setSearchInput(value)
-
-        // Debounce the filter change
-        if (debounceRef.current) {
-            clearTimeout(debounceRef.current)
-        }
-
-        debounceRef.current = setTimeout(() => {
-            const newFilters = { ...localFilters, search: value }
-            setLocalFilters(newFilters)
-            onFilterChange(newFilters)
-        }, 300) // 300ms delay after user stops typing
-    }, [localFilters, onFilterChange])
-
-    const handlePriceChange = (field: 'priceMin' | 'priceMax', value: string) => {
-        const newFilters = { ...localFilters, [field]: value }
-        setLocalFilters(newFilters)
-        onFilterChange(newFilters)
+    const handlePriceMaxChange = (value: string) => {
+        onFilterChange({ ...filters, priceMax: value })
     }
 
     const handleFacilityToggle = (facility: string) => {
-        const newFacilities = localFilters.facilities.includes(facility)
-            ? localFilters.facilities.filter(f => f !== facility)
-            : [...localFilters.facilities, facility]
-
-        const newFilters = { ...localFilters, facilities: newFacilities }
-        setLocalFilters(newFilters)
-        onFilterChange(newFilters)
+        const newFacilities = filters.facilities.includes(facility)
+            ? filters.facilities.filter(f => f !== facility)
+            : [...filters.facilities, facility]
+        onFilterChange({ ...filters, facilities: newFacilities })
     }
 
     const clearFilters = () => {
-        const clearedFilters: FilterState = {
+        onFilterChange({
             search: '',
             priceMin: '',
             priceMax: '',
             facilities: [],
-        }
-        setSearchInput('')
-        setLocalFilters(clearedFilters)
-        onFilterChange(clearedFilters)
+        })
     }
 
     const hasActiveFilters =
-        localFilters.search ||
-        localFilters.priceMin ||
-        localFilters.priceMax ||
-        localFilters.facilities.length > 0
+        filters.search ||
+        filters.priceMin ||
+        filters.priceMax ||
+        filters.facilities.length > 0
 
     const FilterContent = () => (
         <div className="space-y-6">
@@ -117,10 +84,18 @@ export function TourismFilterSidebar({
                         id="search"
                         type="text"
                         placeholder="Cari nama atau deskripsi..."
-                        value={searchInput}
+                        value={filters.search}
                         onChange={(e) => handleSearchChange(e.target.value)}
                         className="pl-9 bg-background/50 border-border/50 focus:border-primary transition-colors"
                     />
+                    {filters.search && (
+                        <button
+                            onClick={() => handleSearchChange('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                        >
+                            <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -138,8 +113,8 @@ export function TourismFilterSidebar({
                             id="priceMin"
                             type="number"
                             placeholder="0"
-                            value={localFilters.priceMin}
-                            onChange={(e) => handlePriceChange('priceMin', e.target.value)}
+                            value={filters.priceMin}
+                            onChange={(e) => handlePriceMinChange(e.target.value)}
                             className="bg-background/50 border-border/50 focus:border-primary transition-colors"
                         />
                     </div>
@@ -151,8 +126,8 @@ export function TourismFilterSidebar({
                             id="priceMax"
                             type="number"
                             placeholder="100000"
-                            value={localFilters.priceMax}
-                            onChange={(e) => handlePriceChange('priceMax', e.target.value)}
+                            value={filters.priceMax}
+                            onChange={(e) => handlePriceMaxChange(e.target.value)}
                             className="bg-background/50 border-border/50 focus:border-primary transition-colors"
                         />
                     </div>
@@ -170,7 +145,7 @@ export function TourismFilterSidebar({
                             <div key={facility} className="flex items-center space-x-2">
                                 <Checkbox
                                     id={`facility-${facility}`}
-                                    checked={localFilters.facilities.includes(facility)}
+                                    checked={filters.facilities.includes(facility)}
                                     onCheckedChange={() => handleFacilityToggle(facility)}
                                     className="border-border/50"
                                 />
