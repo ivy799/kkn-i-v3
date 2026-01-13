@@ -48,7 +48,7 @@ const data = {
       icon: IconCalendarEvent,
     },
   ],
-  documents: [
+  Settings: [
     {
       name: "Pengguna",
       url: "/dashboard/users",
@@ -67,9 +67,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href="/">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">Bonto Lojong</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -77,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
+        <NavDocuments items={data.Settings} />
       </SidebarContent>
     </Sidebar>
   )

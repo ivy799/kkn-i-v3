@@ -37,9 +37,9 @@ export function Navbar({ user }: NavbarProps) {
     <Navbar1
       logo={{
         url: "/",
-        src: "/next.svg",
+        src: "/logo_bantaeng.webp",
         alt: "Logo Desa",
-        title: "Desa KKN",
+        title: "Desa Bonto Lojong",
       }}
       menu={menuItems}
       auth={authConfig}
