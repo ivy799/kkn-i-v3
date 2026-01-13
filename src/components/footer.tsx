@@ -28,7 +28,7 @@ export function Footer() {
     ]
 
     return (
-        <footer className="relative w-full bg-gray-900 text-white">
+        <footer className="relative w-full bg-green-950 text-white">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0">
                 <Image
@@ -38,7 +38,7 @@ export function Footer() {
                     className="object-cover opacity-20"
                     quality={75}
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-gray-900/95 to-gray-900/98" />
+                <div className="absolute inset-0 bg-gradient-to-b from-green-950/95 to-green-950/98" />
             </div>
 
             {/* Content */}
@@ -67,7 +67,7 @@ export function Footer() {
                                     <a
                                         key={social.name}
                                         href={social.href}
-                                        className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors"
+                                        className="w-10 h-10 rounded-lg bg-green-800 hover:bg-green-700 flex items-center justify-center transition-colors"
                                         aria-label={social.name}
                                     >
                                         <Icon className="w-5 h-5" />
@@ -130,7 +130,7 @@ export function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-12 pt-8 border-t border-gray-800">
+                <div className="mt-12 pt-8 border-t border-green-800">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-gray-400 text-sm">
                             © {new Date().getFullYear()} Desa KKN. All rights reserved.

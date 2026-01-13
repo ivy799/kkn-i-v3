@@ -106,7 +106,7 @@ export default function GalleryPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900">
+        <div className="min-h-screen bg-green-900">
             {/* Hero Section */}
             <section className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
                 <Image
@@ -116,7 +116,7 @@ export default function GalleryPage() {
                     className="object-cover"
                     priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-gray-900" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-green-900" />
 
                 <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
@@ -195,8 +195,8 @@ export default function GalleryPage() {
                     </div>
                 ) : (
                     <div className="text-center py-24">
-                        <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <ZoomIn className="w-8 h-8 text-gray-600" />
+                        <div className="w-16 h-16 bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <ZoomIn className="w-8 h-8 text-green-400" />
                         </div>
                         <p className="text-gray-400 text-lg">Belum ada foto dalam galeri</p>
                     </div>
@@ -225,7 +225,7 @@ export default function GalleryPage() {
                                     sizes="100vw"
                                 />
                             </div>
-                            <div className="p-6 bg-gray-900">
+                            <div className="p-6 bg-green-900">
                                 <DialogTitle className="text-xl md:text-2xl font-bold text-white mb-2">
                                     {selectedImage.title || "Untitled"}
                                 </DialogTitle>
