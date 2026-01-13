@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, X, SlidersHorizontal } from "lucide-react"
+import { X, SlidersHorizontal } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -37,10 +37,6 @@ export function TourismFilterSidebar({
     totalResults,
 }: TourismFilterSidebarProps) {
 
-    const handleSearchChange = (value: string) => {
-        onFilterChange({ ...filters, search: value })
-    }
-
     const handlePriceMinChange = (value: string) => {
         onFilterChange({ ...filters, priceMin: value })
     }
@@ -73,34 +69,6 @@ export function TourismFilterSidebar({
 
     const FilterContent = () => (
         <div className="space-y-6">
-            {/* Search */}
-            <div className="space-y-2">
-                <Label htmlFor="search" className="text-sm font-semibold">
-                    Cari Wisata
-                </Label>
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                        id="search"
-                        type="text"
-                        placeholder="Cari nama atau deskripsi..."
-                        value={filters.search}
-                        onChange={(e) => handleSearchChange(e.target.value)}
-                        className="pl-9 bg-background/50 border-border/50 focus:border-primary transition-colors"
-                    />
-                    {filters.search && (
-                        <button
-                            onClick={() => handleSearchChange('')}
-                            className="absolute right-3 top-1/2 -translate-y-1/2"
-                        >
-                            <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-                        </button>
-                    )}
-                </div>
-            </div>
-
-            <Separator />
-
             {/* Price Range */}
             <div className="space-y-3">
                 <Label className="text-sm font-semibold">Rentang Harga Tiket</Label>
@@ -193,7 +161,7 @@ export function TourismFilterSidebar({
                     <SheetTrigger asChild>
                         <Button variant="outline" className="w-full border-border/50">
                             <SlidersHorizontal className="w-4 h-4 mr-2" />
-                            Filter & Cari
+                            Filter Wisata
                             {hasActiveFilters && (
                                 <span className="ml-2 bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
                                     Aktif
@@ -217,7 +185,7 @@ export function TourismFilterSidebar({
                 <CardHeader className="pb-4">
                     <CardTitle className="text-lg flex items-center gap-2">
                         <SlidersHorizontal className="w-5 h-5 text-primary" />
-                        Filter & Cari
+                        Filter Wisata
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

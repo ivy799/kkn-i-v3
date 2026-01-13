@@ -1,9 +1,11 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import Image from "next/image"
 import { TourismCard } from "@/components/tourism-card"
 import { TourismFilterSidebar } from "@/components/tourism-filter-sidebar"
-import { Loader2 } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Loader2, Search, X } from "lucide-react"
 
 interface TourismSpotGallery {
     id: number
@@ -115,7 +117,63 @@ export default function WisataPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+            {/* Hero Section */}
+            <section className="relative w-full h-[280px] md:h-[350px] overflow-hidden">
+                <Image
+                    src="/hero-bg.jpg"
+                    alt="Wisata Desa"
+                    fill
+                    className="object-cover"
+                    priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
 
+                <div className="absolute inset-0 flex flex-col justify-center container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-2xl">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+                            Wisata Desa
+                        </h1>
+                        <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
+                            Jelajahi keindahan dan pesona destinasi wisata unggulan desa kami
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Search Section - Sticky */}
+            <section className="sticky top-0 z-20 bg-white shadow-md">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div className="flex items-center gap-4">
+                        {/* Search Input */}
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Input
+                                type="text"
+                                placeholder="Cari nama destinasi atau deskripsi..."
+                                value={filters.search}
+                                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                                className="pl-10 h-12 w-full"
+                            />
+                            {filters.search && (
+                                <button
+                                    onClick={() => setFilters({ ...filters, search: '' })}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                                >
+                                    <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Results Count */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <p className="text-sm text-gray-500">
+                    Menampilkan {filteredTourismSpots.length} destinasi wisata
+                    {filters.search && ` untuk "${filters.search}"`}
+                </p>
+            </section>
 
             {/* Main Content */}
             <div className="container mx-auto px-4 py-6 md:py-8">
