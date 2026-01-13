@@ -54,7 +54,13 @@ export function middleware(request: NextRequest) {
   //   }
   // }
 
-  return NextResponse.next()
+  // Add pathname header for layout
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-pathname', pathname)
+
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  })
 }
 
 export const config = {

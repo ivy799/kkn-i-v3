@@ -4,6 +4,7 @@ import { Toaster } from "sonner"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { getCurrentUser } from "@/lib/auth"
+import { headers } from "next/headers"
 
 export const metadata: Metadata = {
   title: "KKN App",
@@ -16,17 +17,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getCurrentUser()
+  const headersList = await headers()
+  const pathname = headersList.get("x-pathname") || ""
+  const isDashboard = pathname.startsWith("/dashboard")
 
   return (
     <html lang="id">
       <body className="min-h-screen">
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
-          <Navbar user={user} />
-        </header>
-        <main className="pt-16">
+        {!isDashboard && (
+          <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
+            <Navbar user={user} />
+          </header>
+        )}
+        <main className={isDashboard ? "" : "pt-16"}>
           {children}
         </main>
-        <Footer />
+        {!isDashboard && <Footer />}
         <Toaster position="top-right" richColors />
       </body>
     </html>

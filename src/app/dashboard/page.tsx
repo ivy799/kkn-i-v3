@@ -1,16 +1,79 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
+import { DashboardChart } from "@/components/dashboard-chart"
+import { DashboardTable } from "@/components/dashboard-table"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
+import { getPrisma } from "@/lib/prismaClient"
 
-import data from "./data.json"
+async function getDashboardData() {
+  const [tourismSpots, businesses, events, stats] = await Promise.all([
+    getPrisma.tourismSpot.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        _count: {
+          select: {
+            TourismSpotGallery: true,
+          },
+        },
+      },
+      take: 10,
+      orderBy: { id: 'desc' },
+    }),
+    getPrisma.business.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        type: true,
+      },
+      take: 10,
+      orderBy: { id: 'desc' },
+    }),
+    getPrisma.event.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        startDate: true,
+        status: true,
+      },
+      take: 10,
+      orderBy: { id: 'desc' },
+    }),
+    Promise.all([
+      getPrisma.tourismSpot.count(),
+      getPrisma.business.count(),
+      getPrisma.event.count(),
+      getPrisma.tourismSpotGallery.count(),
+    ]),
+  ])
 
-export default function Page() {
+  return {
+    tourismSpots,
+    businesses,
+    events: events.map(e => ({
+      ...e,
+      title: e.title || 'Untitled Event',
+      startDate: e.startDate?.toISOString() || new Date().toISOString(),
+    })),
+    chartData: {
+      wisata: stats[0],
+      umkm: stats[1],
+      event: stats[2],
+      galeri: stats[3],
+    },
+  }
+}
+
+export default async function Page() {
+  const dashboardData = await getDashboardData()
+
   return (
     <SidebarProvider
       style={
@@ -28,9 +91,13 @@ export default function Page() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <SectionCards />
               <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
+                <DashboardChart data={dashboardData.chartData} />
               </div>
-              <DataTable data={data} />
+              <DashboardTable
+                tourismSpots={dashboardData.tourismSpots}
+                businesses={dashboardData.businesses}
+                events={dashboardData.events}
+              />
             </div>
           </div>
         </div>
