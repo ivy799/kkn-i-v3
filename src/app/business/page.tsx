@@ -143,7 +143,7 @@ export default function BusinessPage() {
             case "Pertanian":
                 return "bg-green-100 text-green-700"
             case "Jasa":
-                return "bg-blue-100 text-blue-700"
+                return "bg-green-100 text-green-700"
             default:
                 return "bg-gray-100 text-gray-700"
         }
@@ -306,7 +306,7 @@ export default function BusinessPage() {
 
                                 {/* Content */}
                                 <div className="p-5">
-                                    <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                                    <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1 group-hover:text-green-600 transition-colors">
                                         {business.name || "Untitled"}
                                     </h3>
 

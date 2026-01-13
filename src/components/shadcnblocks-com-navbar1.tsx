@@ -187,7 +187,7 @@ const Navbar1 = ({
           <div className="flex items-center gap-6">
             <a href={logo.url} className="flex items-center gap-2">
               <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
-              <span className="text-lg font-semibold whitespace-nowrap">{logo.title}</span>
+              <span className="text-lg font-semibold whitespace-nowrap text-white">{logo.title}</span>
             </a>
             <div className="flex items-center">
               <NavigationMenu>
@@ -202,7 +202,7 @@ const Navbar1 = ({
               asChild={isAdmin || auth.login.url !== "#"}
               variant="outline"
               size="sm"
-              className={!isAdmin && auth.login.url === "#" ? "cursor-default" : ""}
+              className={`${!isAdmin && auth.login.url === "#" ? "cursor-default" : ""} border-white/30 text-white hover:bg-green-800 hover:text-white`}
             >
               {isAdmin || auth.login.url !== "#" ? (
                 <a
@@ -230,11 +230,11 @@ const Navbar1 = ({
         <div className="flex lg:hidden items-center justify-between h-16">
           <a href={logo.url} className="flex items-center gap-2">
             <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
-            <span className="text-lg font-semibold">{logo.title}</span>
+            <span className="text-lg font-semibold text-white">{logo.title}</span>
           </a>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" className="border-white/30 text-white hover:bg-green-800 hover:text-white">
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
@@ -302,7 +302,7 @@ const Navbar1 = ({
 const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
-      <NavigationMenuItem key={item.title} className="text-muted-foreground">
+      <NavigationMenuItem key={item.title} className="text-white/80">
         <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
         <NavigationMenuContent>
           <ul className="w-80 p-3">
@@ -337,7 +337,7 @@ const renderMenuItem = (item: MenuItem) => {
   return (
     <a
       key={item.title}
-      className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-accent-foreground"
+      className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-green-800 hover:text-white"
       href={item.url}
     >
       {item.title}

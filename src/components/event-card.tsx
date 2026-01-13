@@ -18,7 +18,7 @@ interface EventCardProps {
 }
 
 const statusColors: Record<string, { bg: string; text: string; label: string }> = {
-    UPCOMING: { bg: "bg-blue-100", text: "text-blue-800", label: "Akan Datang" },
+    UPCOMING: { bg: "bg-green-100", text: "text-green-800", label: "Akan Datang" },
     ONGOING: { bg: "bg-green-100", text: "text-green-800", label: "Berlangsung" },
     COMPLETED: { bg: "bg-gray-100", text: "text-gray-600", label: "Selesai" },
 }
@@ -64,7 +64,7 @@ export function EventCard({ event }: EventCardProps) {
 
             {/* Content */}
             <div className="p-5">
-                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">
                     {event.title || "Untitled Event"}
                 </h3>
 
@@ -75,7 +75,7 @@ export function EventCard({ event }: EventCardProps) {
                 {/* Meta Info */}
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <CalendarIcon className="w-4 h-4 text-blue-500" />
+                        <CalendarIcon className="w-4 h-4 text-green-500" />
                         <span>{formatDateRange()}</span>
                     </div>
 

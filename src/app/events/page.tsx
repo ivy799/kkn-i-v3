@@ -103,7 +103,7 @@ export default function EventsPage() {
                         <button
                             onClick={() => setView("calendar")}
                             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${view === "calendar"
-                                ? "bg-blue-600 text-white"
+                                ? "bg-green-600 text-white"
                                 : "text-gray-600 hover:text-gray-900"
                                 }`}
                         >
@@ -113,7 +113,7 @@ export default function EventsPage() {
                         <button
                             onClick={() => setView("list")}
                             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${view === "list"
-                                ? "bg-blue-600 text-white"
+                                ? "bg-green-600 text-white"
                                 : "text-gray-600 hover:text-gray-900"
                                 }`}
                         >
