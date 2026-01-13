@@ -18,9 +18,8 @@ interface AboutSectionProps {
 export function AboutSection({
     title = "Tentang Kami",
     paragraphs = [
-        "Desa kami didirikan pada tahun 1950, bermula dari sebuah ide sederhana: menciptakan komunitas yang harmonis dan sejahtera. Yang dimulai sebagai kelompok kecil dari tiga keluarga yang berdedikasi telah berkembang menjadi desa yang berkembang pesat dengan berbagai fasilitas modern.",
-        "Selama bertahun-tahun, kami telah membantu ribuan wisatawan menemukan kedamaian dan keindahan alam pedesaan. Pendekatan kami menggabungkan kearifan lokal dengan pelayanan modern.",
-        "Hari ini, kami terus berinovasi dan mendorong batas-batas, selalu dengan misi awal kami di hati: menempatkan masyarakat sebagai prioritas utama dalam segala yang kami bangun.",
+        "Desa Bonto Lojong, yang terletak di Kecamatan Ulu Ere, Kabupaten Bantaeng, memiliki akar sejarah panjang sejak tahun 1943. Berawal dari bagian Desa Bonto Marannu, wilayah ini resmi berdiri sebagai desa persiapan pada tahun 1997 dan definitif pada tahun 2000. Dari masa perintisan jalan poros di zaman kolonial hingga transformasi infrastruktur modern seperti jaringan listrik dan pengaspalan jalan lintas dusun, Bonto Lojong terus berkembang secara dinamis. Kepemimpinan yang silih berganti melalui proses demokrasi, termasuk penerapan sistem e-voting yang inovatif, telah membawa desa ini menjadi wilayah yang maju dengan tata kelola pelayanan publik yang semakin baik.",
+
     ],
     image = "/img/img-02.jpeg",
     primaryButtonText = "Pelajari Sejarah Kami",
@@ -59,23 +58,20 @@ export function AboutSection({
     return (
         <section
             ref={sectionRef}
-            className="w-full py-16 md:py-24 lg:py-32 bg-white"
+            className="w-full py-10 bg-white"
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center ${reverse ? 'lg:flex lg:flex-row-reverse' : ''}`}>
-                    {/* Left Column - Text Content */}
                     <div
                         className={`space-y-6 transition-all duration-1000 lg:flex-1 ${isVisible
                             ? "opacity-100 translate-x-0"
                             : reverse ? "opacity-0 translate-x-10" : "opacity-0 -translate-x-10"
                             }`}
                     >
-                        {/* Title */}
                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                             {title}
                         </h2>
 
-                        {/* Paragraphs */}
                         <div className="space-y-4">
                             {paragraphs.map((paragraph, index) => (
                                 <p
@@ -89,41 +85,22 @@ export function AboutSection({
                                 </p>
                             ))}
                         </div>
-
-                        {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                            <Button
-                                asChild
-                                size="lg"
-                                className="bg-black text-white hover:bg-gray-800 font-medium px-6 py-6 text-sm md:text-base"
-                            >
-                                <a href={primaryButtonUrl}>{primaryButtonText}</a>
-                            </Button>
-                            <Button
-                                asChild
-                                variant="outline"
-                                size="lg"
-                                className="border-2 border-gray-300 text-gray-900 hover:bg-gray-50 font-medium px-6 py-6 text-sm md:text-base"
-                            >
-                                <a href={secondaryButtonUrl}>{secondaryButtonText}</a>
-                            </Button>
-                        </div>
                     </div>
 
-                    {/* Right Column - Image */}
                     <div
                         className={`relative transition-all duration-1000 delay-300 lg:flex-1 ${isVisible
                             ? "opacity-100 translate-x-0"
                             : reverse ? "opacity-0 -translate-x-10" : "opacity-0 translate-x-10"
                             }`}
                     >
-                        <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-2xl">
+                        <div className="relative aspect-square w-full rounded-3xl overflow-hidden shadow-2xl">
                             <Image
                                 src={image}
                                 alt="About Us"
                                 fill
-                                className="object-cover"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                                className="object-cover hover:scale-105 transition-transform duration-700"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
+                                priority
                             />
                         </div>
                     </div>

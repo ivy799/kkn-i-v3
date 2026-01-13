@@ -38,7 +38,7 @@ export function BentoGallery({
     const displayItems = items.slice(0, 6)
 
     return (
-        <section className="w-full py-16 md:py-24 lg:py-32 bg-gray-50">
+        <section className="w-full py-10 bg-gray-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="text-center mb-12 md:mb-16">

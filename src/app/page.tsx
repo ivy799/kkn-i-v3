@@ -72,22 +72,23 @@ export default async function Home() {
         reverse
         title="Kondisi Geografis & Mata Pencaharian"
         paragraphs={[
-          "Desa kami terletak di dataran tinggi dengan ketinggian 800-1200 meter di atas permukaan laut, dikelilingi oleh hamparan sawah terasering yang hijau dan perbukitan yang asri. Iklim sejuk dengan suhu rata-rata 20-25°C menjadikan desa ini tempat yang ideal untuk pertanian dan pariwisata.",
-          "Mayoritas penduduk desa bermata pencaharian sebagai petani dengan komoditas utama padi, sayuran organik, dan kopi. Selain itu, sektor pariwisata dan kerajinan tangan lokal juga berkembang pesat, memberikan peluang ekonomi tambahan bagi masyarakat.",
-          "Dengan kondisi geografis yang strategis dan sumber daya alam yang melimpah, desa kami terus berkembang menjadi destinasi agrowisata yang menarik sambil tetap mempertahankan kearifan lokal dan kelestarian lingkungan.",
+          "Dikenal sebagai sentra agrowisata unggulan di ketinggian 1200–1500 mdpl, Bonto Lojong menawarkan pesona alam pegunungan yang sejuk dan tanah yang subur. Desa ini merupakan ikon penghasil sayuran utama serta pusat budidaya stroberi dan apel yang menjadi daya tarik wisatawan mancanegara maupun lokal. Kehadiran Mini Showfarm sebagai ikon wisata juga mempertegas posisi Bonto Lojong sebagai destinasi strategis di Kabupaten Bantaeng. Dengan semangat dedikasi dari setiap periode kepemimpinan, desa ini berkomitmen untuk terus mengembangkan potensi ekonomi lokal dan kesejahteraan masyarakat secara berkelanjutan."
         ]}
         image="/img/img-03.jpeg"
         primaryButtonText="Lihat Peta Desa"
         primaryButtonUrl="/map"
-        secondaryButtonText="Produk Lokal"
-        secondaryButtonUrl="/products"
       />
-      <Gallery4
-        title="Destinasi Wisata"
-        description="Jelajahi keindahan alam dan budaya desa kami. Dari sawah terasering yang memukau hingga spot sunrise terbaik, temukan pengalaman wisata yang tak terlupakan."
-        items={tourismItems}
-        className="p-10"
-      />
+      <div id="wisata">
+        <Gallery4
+          title="Destinasi Wisata"
+          description="Jelajahi keindahan alam dan budaya desa kami. Dari sawah terasering yang memukau hingga spot sunrise terbaik, temukan pengalaman wisata yang tak terlupakan."
+          items={tourismItems}
+          className="px-20"
+          showMoreButton={true}
+          showMoreUrl="/wisata"
+          showMoreText="Lihat Lebih Banyak"
+        />
+      </div>
       <BentoGallery items={galleryItems} />
     </div>
   );

@@ -13,11 +13,24 @@ interface HeroSectionProps {
 
 export function HeroSection({
     title = "Desa Wisata Bonto Lojong",
-    subtitle = "Desa Wisata indah yang sejuk dan asri",
-    ctaText = "RESERVASI SEKARANG",
-    ctaUrl = "#",
+    subtitle = "Jelajahi pesona agrowisata dan panorama pegunungan yang memukau. Petualangan autentik menanti Anda di jantung Sulawesi Selatan.",
+    ctaText = "LIHAT SEMUA WISATA",
+    ctaUrl = "#wisata",
     backgroundImage = "/img/img-01.jpeg",
 }: HeroSectionProps) {
+    const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault()
+        const targetId = ctaUrl.replace('#', '')
+        const targetElement = document.getElementById(targetId)
+
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
+        }
+    }
+
     return (
         <section className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden">
             {/* Background Image */}
@@ -54,7 +67,7 @@ export function HeroSection({
                             size="lg"
                             className="bg-white text-black hover:bg-white/90 font-semibold px-6 sm:px-8 py-5 sm:py-6 text-xs sm:text-sm md:text-base tracking-wider uppercase shadow-lg hover:shadow-xl transition-all duration-300"
                         >
-                            <a href={ctaUrl}>{ctaText}</a>
+                            <a href={ctaUrl} onClick={handleScrollToSection}>{ctaText}</a>
                         </Button>
                     </div>
                 </div>

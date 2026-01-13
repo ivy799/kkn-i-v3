@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,9 @@ export interface Gallery4Props {
   description?: string;
   items: Gallery4Item[];
   className?: string;
+  showMoreButton?: boolean;
+  showMoreUrl?: string;
+  showMoreText?: string;
 }
 
 const data = [
@@ -81,6 +85,9 @@ const Gallery4 = ({
   description = "Discover how leading companies and developers are leveraging modern web technologies to build exceptional digital experiences. These case studies showcase real-world applications and success stories.",
   items = data,
   className,
+  showMoreButton = false,
+  showMoreUrl = "/wisata",
+  showMoreText = "Lihat Lebih Banyak",
 }: Gallery4Props) => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -104,7 +111,7 @@ const Gallery4 = ({
   }, [carouselApi]);
 
   return (
-    <section className={cn("py-32", className)}>
+    <section className={cn("py-20", className)}>
       <div className="container">
         <div className="mb-8 flex items-end justify-between md:mb-14 lg:mb-16">
           <div className="flex flex-col gap-4">
@@ -186,14 +193,27 @@ const Gallery4 = ({
           {items.map((_, index) => (
             <button
               key={index}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                currentSlide === index ? "bg-primary" : "bg-primary/20"
-              }`}
+              className={`h-2 w-2 rounded-full transition-colors ${currentSlide === index ? "bg-primary" : "bg-primary/20"
+                }`}
               onClick={() => carouselApi?.scrollTo(index)}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
+        {showMoreButton && (
+          <div className="mt-10 flex justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="px-8 py-6 text-base font-semibold tracking-wide hover:scale-105 transition-all duration-300"
+            >
+              <Link href={showMoreUrl}>
+                {showMoreText}
+                <ArrowRight className="ml-2 size-5" />
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
