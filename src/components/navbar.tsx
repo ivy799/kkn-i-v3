@@ -23,14 +23,14 @@ export function Navbar({ user }: NavbarProps) {
   const authConfig = user
     ? {
       login: {
-        text: user.role === "ADMIN" ? "Dashboard" : user.username,
-        url: user.role === "ADMIN" ? "/dashboard" : "#",
+        text: "Dashboard",
+        url: "/dashboard",
       },
-      signup: { text: "Keluar", url: "/api/auth/signout" },
+      signup: null, // Remove logout from navbar
     }
     : {
       login: { text: "Masuk", url: "/auth/signin" },
-      signup: { text: "Daftar", url: "/auth/signup" },
+      signup: null, // Remove signup from navbar
     }
 
   return (

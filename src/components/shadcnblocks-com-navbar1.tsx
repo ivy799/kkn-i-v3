@@ -52,10 +52,10 @@ interface Navbar1Props {
       text: string;
       url: string;
     };
-    signup: {
+    signup?: {
       text: string;
       url: string;
-    };
+    } | null;
   };
   isAdmin?: boolean;
 }
@@ -202,7 +202,7 @@ const Navbar1 = ({
               asChild={isAdmin || auth.login.url !== "#"}
               variant="outline"
               size="sm"
-              className={`${!isAdmin && auth.login.url === "#" ? "cursor-default" : ""} border-white/30 text-white hover:bg-green-800 hover:text-white`}
+              className={`${!isAdmin && auth.login.url === "#" ? "cursor-default" : ""} bg-white text-green-900 border-white hover:bg-green-100 hover:text-green-900`}
             >
               {isAdmin || auth.login.url !== "#" ? (
                 <a
@@ -215,14 +215,16 @@ const Navbar1 = ({
                 <span>{auth.login.text}</span>
               )}
             </Button>
-            <Button asChild size="sm">
-              <a
-                href={auth.signup.url}
-                onClick={(e) => handleAuthClick(e, auth.signup.url)}
-              >
-                {auth.signup.text}
-              </a>
-            </Button>
+            {auth.signup && (
+              <Button asChild size="sm">
+                <a
+                  href={auth.signup.url}
+                  onClick={(e) => handleAuthClick(e, auth.signup!.url)}
+                >
+                  {auth.signup.text}
+                </a>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -284,11 +286,13 @@ const Navbar1 = ({
                       <span>{auth.login.text}</span>
                     )}
                   </Button>
-                  <Button asChild>
-                    <a href={auth.signup.url} onClick={(e) => handleAuthClick(e, auth.signup.url)}>
-                      {auth.signup.text}
-                    </a>
-                  </Button>
+                  {auth.signup && (
+                    <Button asChild>
+                      <a href={auth.signup.url} onClick={(e) => handleAuthClick(e, auth.signup!.url)}>
+                        {auth.signup.text}
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
             </SheetContent>
