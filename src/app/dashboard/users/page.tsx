@@ -2,34 +2,34 @@
 
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
-import { VillageProfileForm } from "@/components/village-profile-form"
+import { UsersDataTable } from "@/components/users-data-table"
 import {
     SidebarInset,
     SidebarProvider,
 } from "@/components/ui/sidebar"
 import { useEffect, useState } from "react"
 
-export default function VillageProfilePage() {
-    const [villageProfile, setVillageProfile] = useState(null)
+export default function UsersPage() {
+    const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
 
-    const fetchVillageProfile = async () => {
+    const fetchUsers = async () => {
         try {
             setLoading(true)
-            const response = await fetch('/api/village-profile')
+            const response = await fetch('/api/user')
             const result = await response.json()
             if (result.success) {
-                setVillageProfile(result.data)
+                setUsers(result.data)
             }
         } catch (error) {
-            console.error('Error fetching village profile:', error)
+            console.error('Error fetching users:', error)
         } finally {
             setLoading(false)
         }
     }
 
     useEffect(() => {
-        fetchVillageProfile()
+        fetchUsers()
     }, [])
 
     return (
@@ -47,7 +47,7 @@ export default function VillageProfilePage() {
                 <div className="flex flex-1 flex-col">
                     <div className="@container/main flex flex-1 flex-col gap-2">
                         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                            <VillageProfileForm data={villageProfile} loading={loading} onRefresh={fetchVillageProfile} />
+                            <UsersDataTable data={users} loading={loading} onRefresh={fetchUsers} />
                         </div>
                     </div>
                 </div>

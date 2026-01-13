@@ -47,22 +47,12 @@ const data = {
       url: "/dashboard/events",
       icon: IconCalendarEvent,
     },
-    {
-      title: "Artikel",
-      url: "#",
-      icon: IconNews,
-    },
   ],
   documents: [
     {
       name: "Pengguna",
-      url: "#",
+      url: "/dashboard/users",
       icon: IconUsers,
-    },
-    {
-      name: "Pengaturan",
-      url: "/dashboard/pengaturan",
-      icon: IconSettings,
     },
   ],
 }
