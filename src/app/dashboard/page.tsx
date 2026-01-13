@@ -8,6 +8,8 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import { getPrisma } from "@/lib/prismaClient"
+import { getCurrentUser } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 async function getDashboardData() {
   const [tourismSpots, businesses, events, stats] = await Promise.all([
@@ -72,6 +74,17 @@ async function getDashboardData() {
 }
 
 export default async function Page() {
+  // Server-side authentication check - defense in depth
+  const user = await getCurrentUser()
+
+  if (!user) {
+    redirect('/auth/signin')
+  }
+
+  if (user.role !== 'ADMIN') {
+    redirect('/')
+  }
+
   const dashboardData = await getDashboardData()
 
   return (
