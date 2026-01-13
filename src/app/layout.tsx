@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import { LayoutWrapper } from "@/components/layout-wrapper"
 import { getCurrentUser } from "@/lib/auth"
-import { headers } from "next/headers"
 
 export const metadata: Metadata = {
   title: "Desa Bonto Lojong",
@@ -17,22 +15,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getCurrentUser()
-  const headersList = await headers()
-  const pathname = headersList.get("x-pathname") || ""
-  const isDashboard = pathname.startsWith("/dashboard")
 
   return (
     <html lang="id">
       <body className="min-h-screen">
-        {!isDashboard && (
-          <header className="fixed top-0 left-0 right-0 z-50 bg-green-900 border-b border-green-800 shadow-sm">
-            <Navbar user={user} />
-          </header>
-        )}
-        <main className={isDashboard ? "" : "pt-16"}>
+        <LayoutWrapper user={user}>
           {children}
-        </main>
-        {!isDashboard && <Footer />}
+        </LayoutWrapper>
         <Toaster position="top-right" richColors />
       </body>
     </html>

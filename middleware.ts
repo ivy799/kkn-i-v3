@@ -8,10 +8,16 @@ export function middleware(request: NextRequest) {
 
     console.log('🔒 Middleware executing for:', pathname, 'Token:', token ? 'exists' : 'missing')
 
+    // Set pathname header for layout (must be done early for all requests)
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-pathname', pathname)
+
     // 1. Bypass public paths and GET requests to API
     const publicPaths = ['/api/auth/signin', '/api/auth/signup', '/api/auth/signout']
     if (publicPaths.some(path => pathname.startsWith(path))) {
-        return NextResponse.next()
+        return NextResponse.next({
+            request: { headers: requestHeaders },
+        })
     }
 
     // 2. Proteksi Halaman Dashboard (Hanya ADMIN)
@@ -20,7 +26,9 @@ export function middleware(request: NextRequest) {
 
         if (!token) {
             console.log('❌ No token - redirecting to signin')
-            return NextResponse.redirect(new URL('/auth/signin', request.url))
+            const response = NextResponse.redirect(new URL('/auth/signin', request.url))
+            response.headers.set('x-pathname', pathname)
+            return response
         }
 
         try {
@@ -30,13 +38,20 @@ export function middleware(request: NextRequest) {
             if (payload.role !== 'ADMIN') {
                 console.log('❌ Not admin - redirecting to home')
                 // Jika bukan admin, arahkan ke halaman home
-                return NextResponse.redirect(new URL('/', request.url))
+                const response = NextResponse.redirect(new URL('/', request.url))
+                response.headers.set('x-pathname', pathname)
+                return response
             }
 
             console.log('✅ Admin access granted')
+            return NextResponse.next({
+                request: { headers: requestHeaders },
+            })
         } catch (error) {
             console.log('❌ Token invalid - redirecting to signin')
-            return NextResponse.redirect(new URL('/auth/signin', request.url))
+            const response = NextResponse.redirect(new URL('/auth/signin', request.url))
+            response.headers.set('x-pathname', pathname)
+            return response
         }
     }
 
@@ -47,7 +62,9 @@ export function middleware(request: NextRequest) {
 
         // Allow GET requests (read operations) to pass through
         if (!isCUDOperation) {
-            return NextResponse.next()
+            return NextResponse.next({
+                request: { headers: requestHeaders },
+            })
         }
 
         try {
@@ -61,7 +78,6 @@ export function middleware(request: NextRequest) {
                 return NextResponse.json({ success: false, message: 'Forbidden: Admin access required' }, { status: 403 })
             }
 
-            const requestHeaders = new Headers(request.headers)
             requestHeaders.set('x-user-id', payload.userId.toString())
             requestHeaders.set('x-user-role', payload.role)
 
@@ -73,10 +89,7 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // Add pathname header for layout
-    const requestHeaders = new Headers(request.headers)
-    requestHeaders.set('x-pathname', pathname)
-
+    // Default: pass through with pathname header
     return NextResponse.next({
         request: { headers: requestHeaders },
     })
