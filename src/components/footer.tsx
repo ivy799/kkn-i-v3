@@ -14,16 +14,9 @@ export function Footer() {
             { name: "UMKM", href: "/businesses" },
         ],
         info: [
-            { name: "Kontak", href: "/contact" },
+            { name: "Tentang", href: "/About" },
         ],
     }
-
-    const socialLinks = [
-        { name: "Facebook", icon: Facebook, href: "#" },
-        { name: "Instagram", icon: Instagram, href: "#" },
-        { name: "Twitter", icon: Twitter, href: "#" },
-        { name: "YouTube", icon: Youtube, href: "#" },
-    ]
 
     return (
         <footer className="relative w-full bg-green-950 text-white">
@@ -57,22 +50,6 @@ export function Footer() {
                         <p className="text-gray-400 mb-6 max-w-sm">
                             Desa wisata yang indah dengan pemandangan alam yang menakjubkan dan budaya lokal yang kaya.
                         </p>
-                        {/* Social Media Icons */}
-                        <div className="flex gap-3">
-                            {socialLinks.map((social) => {
-                                const Icon = social.icon
-                                return (
-                                    <a
-                                        key={social.name}
-                                        href={social.href}
-                                        className="w-10 h-10 rounded-lg bg-green-800 hover:bg-green-700 flex items-center justify-center transition-colors"
-                                        aria-label={social.name}
-                                    >
-                                        <Icon className="w-5 h-5" />
-                                    </a>
-                                )
-                            })}
-                        </div>
                     </div>
 
                     {/* Navigation Menu */}
@@ -127,20 +104,11 @@ export function Footer() {
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
                 <div className="mt-12 pt-8 border-t border-green-800">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="flex flex-col md:flex-row justify-center items-center gap-4">
                         <p className="text-gray-400 text-sm">
-                            © {new Date().getFullYear()} Desa Wisata Bonto Lojong. All rights reserved.
+                            Dibuat Oleh KKN Unhas 115 | © {new Date().getFullYear()} Desa Wisata Bonto Lojong. Hak Cipta Dilindungi.
                         </p>
-                        <div className="flex gap-6 text-sm">
-                            <a href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                                Privacy Policy
-                            </a>
-                            <a href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                                Terms of Service
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>

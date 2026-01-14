@@ -15,7 +15,7 @@ export function Navbar({ user }: NavbarProps) {
     { title: "Beranda", url: "/" },
     { title: "Profil Desa", url: "/profile" },
     { title: "Galeri", url: "/gallery" },
-    { title: "Event", url: "/events" },
+    { title: "Acara", url: "/events" },
     { title: "Wisata", url: "/wisata" },
     { title: "UMKM", url: "/business" },
   ]

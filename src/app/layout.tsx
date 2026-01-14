@@ -22,7 +22,7 @@ export default async function RootLayout({
         <LayoutWrapper user={user}>
           {children}
         </LayoutWrapper>
-        <Toaster position="top-right" richColors />
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );
