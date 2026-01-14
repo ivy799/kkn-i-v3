@@ -73,7 +73,26 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // 4. Proteksi API Routes - Logika Akses CUD
+    // 4. Proteksi API User Routes (/api/user/*) - Semua method butuh auth
+    if (pathname.startsWith('/api/user/')) {
+        if (!token) {
+            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+        }
+
+        try {
+            const payload = verifyToken(token)
+            requestHeaders.set('x-user-id', payload.userId.toString())
+            requestHeaders.set('x-user-role', payload.role)
+
+            return NextResponse.next({
+                request: { headers: requestHeaders },
+            })
+        } catch (error) {
+            return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
+        }
+    }
+
+    // 5. Proteksi API Routes - Logika Akses CUD
     if (pathname.startsWith('/api/')) {
         const isCUDOperation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
 
