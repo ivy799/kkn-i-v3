@@ -65,7 +65,7 @@ export default async function Home() {
   const galleryItems = await getGalleryItems();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <HeroSection />
       <AboutSection />
       <AboutSection
@@ -83,7 +83,6 @@ export default async function Home() {
           title="Destinasi Wisata"
           description="Jelajahi keindahan alam dan budaya desa kami. Dari sawah terasering yang memukau hingga spot sunrise terbaik, temukan pengalaman wisata yang tak terlupakan."
           items={tourismItems}
-          className="px-20"
           showMoreButton={true}
           showMoreUrl="/wisata"
           showMoreText="Lihat Lebih Banyak"

@@ -89,7 +89,7 @@ export default function ProfilePage() {
     }, [])
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white overflow-x-hidden">
             {/* Hero Image Section */}
             <section className="w-full h-[400px] md:h-[500px] lg:h-[600px] relative overflow-hidden">
                 <img

@@ -236,7 +236,7 @@ const Navbar1 = ({
           </a>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="border-white/30 text-white hover:bg-green-800 hover:text-white">
+              <Button variant="outline" size="icon" className="border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-900">
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>

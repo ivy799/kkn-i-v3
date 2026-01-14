@@ -12,6 +12,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet"
 
 interface BusinessGallery {
     id: number
@@ -57,6 +64,8 @@ export default function BusinessPage() {
     const [selectedType, setSelectedType] = useState("all")
     const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set())
     const [showFilters, setShowFilters] = useState(false)
+    const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map())
 
@@ -278,6 +287,10 @@ export default function BusinessPage() {
                                 style={{
                                     transitionDelay: `${(index % 8) * 75}ms`,
                                 }}
+                                onClick={() => {
+                                    setSelectedBusiness(business)
+                                    setIsDrawerOpen(true)
+                                }}
                             >
                                 {/* Image */}
                                 <div className="relative h-[220px] overflow-hidden bg-gray-100">
@@ -387,6 +400,134 @@ export default function BusinessPage() {
                     </div>
                 )}
             </section>
+
+            {/* Detail Drawer */}
+            <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+                    {selectedBusiness && (
+                        <>
+                            <SheetHeader className="space-y-4">
+                                {/* Image Gallery */}
+                                <div className="relative h-[250px] -mx-6 -mt-6 mb-4 overflow-hidden">
+                                    <Image
+                                        src={selectedBusiness.BusinessGallery?.[0]?.media || "/img/img-01.jpeg"}
+                                        alt={selectedBusiness.name || "Business"}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    {/* Type Badge */}
+                                    <div className="absolute top-4 left-4">
+                                        <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${getTypeColor(selectedBusiness.type)}`}>
+                                            {selectedBusiness.type || "Lainnya"}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <SheetTitle className="text-2xl font-bold text-gray-900">
+                                        {selectedBusiness.name || "Untitled"}
+                                    </SheetTitle>
+                                    <SheetDescription className="text-base text-gray-600 mt-2">
+                                        {selectedBusiness.description || "Deskripsi tidak tersedia"}
+                                    </SheetDescription>
+                                </div>
+                            </SheetHeader>
+
+                            <div className="mt-6 space-y-6">
+                                {/* Price Range */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-gray-900 mb-2">Kisaran Harga</h3>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-2xl font-bold text-gray-900">
+                                            {formatPrice(selectedBusiness.minimumPrice)}
+                                        </span>
+                                        {selectedBusiness.maximumPrice && selectedBusiness.maximumPrice !== selectedBusiness.minimumPrice && (
+                                            <>
+                                                <span className="text-gray-400">-</span>
+                                                <span className="text-2xl font-bold text-gray-900">
+                                                    {formatPrice(selectedBusiness.maximumPrice)}
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Owner Info */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Informasi Pemilik</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex items-start gap-3">
+                                            <Store className="w-5 h-5 text-gray-400 mt-0.5" />
+                                            <div>
+                                                <p className="text-sm text-gray-500">Pemilik</p>
+                                                <p className="text-base text-gray-900 font-medium">
+                                                    {selectedBusiness.ownerName || "Tidak tersedia"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {selectedBusiness.address && (
+                                            <div className="flex items-start gap-3">
+                                                <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
+                                                <div>
+                                                    <p className="text-sm text-gray-500">Alamat</p>
+                                                    <p className="text-base text-gray-900">
+                                                        {selectedBusiness.address}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {selectedBusiness.phoneNumber && (
+                                            <div className="flex items-start gap-3">
+                                                <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
+                                                <div>
+                                                    <p className="text-sm text-gray-500">Kontak</p>
+                                                    <p className="text-base text-gray-900 font-medium">
+                                                        {selectedBusiness.phoneNumber}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Gallery Images */}
+                                {selectedBusiness.BusinessGallery && selectedBusiness.BusinessGallery.length > 1 && (
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-gray-900 mb-3">Galeri Foto</h3>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {selectedBusiness.BusinessGallery.slice(0, 6).map((gallery, idx) => (
+                                                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden">
+                                                    <Image
+                                                        src={gallery.media || "/img/img-01.jpeg"}
+                                                        alt={`Gallery ${idx + 1}`}
+                                                        fill
+                                                        className="object-cover"
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* WhatsApp Button */}
+                                {selectedBusiness.phoneNumber && (
+                                    <a
+                                        href={`https://wa.me/${selectedBusiness.phoneNumber.replace(/^0/, "62")}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block"
+                                    >
+                                        <Button className="w-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2 h-12">
+                                            <Phone className="w-5 h-5" />
+                                            Hubungi via WhatsApp
+                                        </Button>
+                                    </a>
+                                )}
+                            </div>
+                        </>
+                    )}
+                </SheetContent>
+            </Sheet>
         </div>
     )
 }
