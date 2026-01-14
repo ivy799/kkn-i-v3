@@ -4,15 +4,15 @@ import { verifyToken } from '@/lib/jwt'
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
+    const method = request.method
     const token = request.cookies.get('auth_token')?.value
 
-    console.log('🔒 Middleware executing for:', pathname, 'Token:', token ? 'exists' : 'missing')
 
     // Set pathname header for layout (must be done early for all requests)
     const requestHeaders = new Headers(request.headers)
     requestHeaders.set('x-pathname', pathname)
 
-    // 1. Bypass public paths and GET requests to API
+    // 1. Bypass public paths
     const publicPaths = ['/api/auth/signin', '/api/auth/signup', '/api/auth/signout']
     if (publicPaths.some(path => pathname.startsWith(path))) {
         return NextResponse.next({
@@ -22,10 +22,7 @@ export function middleware(request: NextRequest) {
 
     // 2. Proteksi User Dashboard (User yang sudah login - ADMIN atau USER)
     if (pathname.startsWith('/user-dashboard')) {
-        console.log('🔒 User Dashboard access attempt - Token:', token ? 'exists' : 'missing')
-
         if (!token) {
-            console.log('❌ No token - redirecting to signin')
             const response = NextResponse.redirect(new URL('/auth/signin', request.url))
             response.headers.set('x-pathname', pathname)
             return response
@@ -33,8 +30,6 @@ export function middleware(request: NextRequest) {
 
         try {
             const payload = verifyToken(token)
-            console.log('✅ Token verified for user dashboard - Role:', payload.role)
-
             requestHeaders.set('x-user-id', payload.userId.toString())
             requestHeaders.set('x-user-role', payload.role)
 
@@ -42,7 +37,6 @@ export function middleware(request: NextRequest) {
                 request: { headers: requestHeaders },
             })
         } catch (error) {
-            console.log('❌ Token invalid - redirecting to signin')
             const response = NextResponse.redirect(new URL('/auth/signin', request.url))
             response.headers.set('x-pathname', pathname)
             return response
@@ -51,10 +45,7 @@ export function middleware(request: NextRequest) {
 
     // 3. Proteksi Halaman Admin Dashboard (Hanya ADMIN)
     if (pathname.startsWith('/dashboard')) {
-        console.log('🔒 Admin Dashboard access attempt - Token:', token ? 'exists' : 'missing')
-
         if (!token) {
-            console.log('❌ No token - redirecting to signin')
             const response = NextResponse.redirect(new URL('/auth/signin', request.url))
             response.headers.set('x-pathname', pathname)
             return response
@@ -62,16 +53,13 @@ export function middleware(request: NextRequest) {
 
         try {
             const payload = verifyToken(token)
-            console.log('✅ Token verified - Role:', payload.role)
 
             if (payload.role !== 'ADMIN') {
-                console.log('❌ Not admin - redirecting to user-dashboard')
                 const response = NextResponse.redirect(new URL('/user-dashboard', request.url))
                 response.headers.set('x-pathname', pathname)
                 return response
             }
 
-            console.log('✅ Admin access granted')
             requestHeaders.set('x-user-id', payload.userId.toString())
             requestHeaders.set('x-user-role', payload.role)
 
@@ -79,52 +67,48 @@ export function middleware(request: NextRequest) {
                 request: { headers: requestHeaders },
             })
         } catch (error) {
-            console.log('❌ Token invalid - redirecting to signin')
             const response = NextResponse.redirect(new URL('/auth/signin', request.url))
             response.headers.set('x-pathname', pathname)
             return response
         }
     }
 
-    // 4. Proteksi API User Routes (untuk user biasa yang login)
-    if (pathname.startsWith('/api/user/')) {
-        const method = request.method
-
-        try {
-            if (!token) {
-                return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-            }
-
-            const payload = verifyToken(token)
-
-            requestHeaders.set('x-user-id', payload.userId.toString())
-            requestHeaders.set('x-user-role', payload.role)
-
-            return NextResponse.next({
-                request: { headers: requestHeaders },
-            })
-        } catch (error) {
-            return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
-        }
-    }
-
-    // 5. Proteksi API Routes Admin (Hanya untuk CUD operations - POST, PUT, PATCH, DELETE)
+    // 4. Proteksi API Routes - Logika Akses CUD
     if (pathname.startsWith('/api/')) {
-        const method = request.method
         const isCUDOperation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
 
-        // Allow GET requests (read operations) to pass through
+        // GET requests selalu diizinkan (public read)
         if (!isCUDOperation) {
             return NextResponse.next({
                 request: { headers: requestHeaders },
             })
         }
 
-        try {
+        // Khusus POST ke /api/business - User yang login bisa CREATE
+        if (method === 'POST' && pathname.startsWith('/api/business')) {
             if (!token) {
-                return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+                return NextResponse.json({ success: false, message: 'Unauthorized - Login required' }, { status: 401 })
             }
 
+            try {
+                const payload = verifyToken(token)
+                requestHeaders.set('x-user-id', payload.userId.toString())
+                requestHeaders.set('x-user-role', payload.role)
+
+                return NextResponse.next({
+                    request: { headers: requestHeaders },
+                })
+            } catch (error) {
+                return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
+            }
+        }
+
+        // Semua CUD operations lainnya - Hanya ADMIN
+        if (!token) {
+            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+        }
+
+        try {
             const payload = verifyToken(token)
 
             if (payload.role !== 'ADMIN') {

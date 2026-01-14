@@ -154,6 +154,7 @@ export default function NewBusinessPage() {
             const response = await fetch('/api/user/business', {
                 method: 'POST',
                 body: submitData,
+                credentials: 'include',
             })
 
             const data = await response.json()

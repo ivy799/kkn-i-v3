@@ -65,13 +65,36 @@ export async function GET(request: NextRequest) {
 // POST - Submit new business request
 export async function POST(request: NextRequest) {
     try {
-        const userId = request.headers.get('x-user-id');
+        // Coba ambil dari header dulu (jika middleware aktif)
+        let userId = request.headers.get('x-user-id');
 
+        // Jika tidak ada header (middleware dimatikan), baca token dari cookies
         if (!userId) {
-            return NextResponse.json(
-                { success: false, message: 'Unauthorized' },
-                { status: 401 }
-            );
+            const token = request.cookies.get('auth_token')?.value;
+            console.log('📝 [API] No x-user-id header, reading token from cookies:', token ? 'exists' : 'missing');
+
+            if (!token) {
+                return NextResponse.json(
+                    { success: false, message: 'Unauthorized - No token' },
+                    { status: 401 }
+                );
+            }
+
+            try {
+                // Import verifyToken
+                const { verifyToken } = await import('@/lib/jwt');
+                const payload = verifyToken(token);
+                console.log('✅ [API] Token verified - User ID:', payload.userId);
+                userId = payload.userId.toString();
+            } catch (error) {
+                console.log('❌ [API] Invalid token:', error);
+                return NextResponse.json(
+                    { success: false, message: 'Invalid token' },
+                    { status: 401 }
+                );
+            }
+        } else {
+            console.log('✅ [API] Using x-user-id from middleware:', userId);
         }
 
         const formData = await request.formData();
