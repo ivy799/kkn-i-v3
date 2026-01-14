@@ -6,16 +6,14 @@ export function Footer() {
         menu: [
             { name: "Beranda", href: "/" },
             { name: "Profil Desa", href: "/profile" },
-            { name: "Berita", href: "/articles" },
             { name: "Galeri", href: "/gallery" },
         ],
         explore: [
             { name: "Event", href: "/events" },
-            { name: "UMKM", href: "/businesses" },
             { name: "Wisata", href: "/tourism" },
+            { name: "UMKM", href: "/businesses" },
         ],
         info: [
-            { name: "Tentang", href: "/about" },
             { name: "Kontak", href: "/contact" },
         ],
     }
@@ -48,13 +46,13 @@ export function Footer() {
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-6">
                             <Image
-                                src="/next.svg"
+                                src="/logo_bantaeng.webp"
                                 alt="Logo Desa"
                                 width={32}
                                 height={32}
                                 className="invert"
                             />
-                            <span className="text-xl font-bold">Desa KKN</span>
+                            <span className="text-xl font-bold">Desa Wisata Bonto Lojong</span>
                         </div>
                         <p className="text-gray-400 mb-6 max-w-sm">
                             Desa wisata yang indah dengan pemandangan alam yang menakjubkan dan budaya lokal yang kaya.
@@ -133,7 +131,7 @@ export function Footer() {
                 <div className="mt-12 pt-8 border-t border-green-800">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-gray-400 text-sm">
-                            © {new Date().getFullYear()} Desa KKN. All rights reserved.
+                            © {new Date().getFullYear()} Desa Wisata Bonto Lojong. All rights reserved.
                         </p>
                         <div className="flex gap-6 text-sm">
                             <a href="/privacy" className="text-gray-400 hover:text-white transition-colors">

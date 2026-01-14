@@ -6,12 +6,12 @@ import { Footer } from "@/components/footer"
 
 interface LayoutWrapperProps {
     children: React.ReactNode
-    user: { id: number; email: string; name: string; role: string } | null
+    user: { userId: number; username: string; role: string } | null
 }
 
 export function LayoutWrapper({ children, user }: LayoutWrapperProps) {
     const pathname = usePathname()
-    const isDashboard = pathname.startsWith("/dashboard")
+    const isDashboard = pathname.startsWith("/dashboard") || pathname.startsWith("/user-dashboard")
 
     return (
         <>

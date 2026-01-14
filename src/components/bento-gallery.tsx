@@ -10,6 +10,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { X } from "lucide-react"
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 interface GalleryItem {
     id: string
@@ -122,9 +124,12 @@ export function BentoGallery({
                     <Button
                         asChild
                         size="lg"
-                        className="bg-black text-white hover:bg-gray-800 font-medium px-8 py-6 text-sm md:text-base"
+                        className="px-8 py-6 text-base font-semibold tracking-wide hover:scale-105 transition-all duration-300"
                     >
-                        <a href={showMoreUrl}>{showMoreText}</a>
+                        <Link href={showMoreUrl}>
+                            {showMoreText}
+                            <ArrowRight className="ml-2 size-5" />
+                        </Link>
                     </Button>
                 </div>
             </div>

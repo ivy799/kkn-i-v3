@@ -20,9 +20,38 @@ export function middleware(request: NextRequest) {
         })
     }
 
-    // 2. Proteksi Halaman Dashboard (Hanya ADMIN)
+    // 2. Proteksi User Dashboard (User yang sudah login - ADMIN atau USER)
+    if (pathname.startsWith('/user-dashboard')) {
+        console.log('🔒 User Dashboard access attempt - Token:', token ? 'exists' : 'missing')
+
+        if (!token) {
+            console.log('❌ No token - redirecting to signin')
+            const response = NextResponse.redirect(new URL('/auth/signin', request.url))
+            response.headers.set('x-pathname', pathname)
+            return response
+        }
+
+        try {
+            const payload = verifyToken(token)
+            console.log('✅ Token verified for user dashboard - Role:', payload.role)
+
+            requestHeaders.set('x-user-id', payload.userId.toString())
+            requestHeaders.set('x-user-role', payload.role)
+
+            return NextResponse.next({
+                request: { headers: requestHeaders },
+            })
+        } catch (error) {
+            console.log('❌ Token invalid - redirecting to signin')
+            const response = NextResponse.redirect(new URL('/auth/signin', request.url))
+            response.headers.set('x-pathname', pathname)
+            return response
+        }
+    }
+
+    // 3. Proteksi Halaman Admin Dashboard (Hanya ADMIN)
     if (pathname.startsWith('/dashboard')) {
-        console.log('🔒 Dashboard access attempt - Token:', token ? 'exists' : 'missing')
+        console.log('🔒 Admin Dashboard access attempt - Token:', token ? 'exists' : 'missing')
 
         if (!token) {
             console.log('❌ No token - redirecting to signin')
@@ -36,14 +65,16 @@ export function middleware(request: NextRequest) {
             console.log('✅ Token verified - Role:', payload.role)
 
             if (payload.role !== 'ADMIN') {
-                console.log('❌ Not admin - redirecting to home')
-                // Jika bukan admin, arahkan ke halaman home
-                const response = NextResponse.redirect(new URL('/', request.url))
+                console.log('❌ Not admin - redirecting to user-dashboard')
+                const response = NextResponse.redirect(new URL('/user-dashboard', request.url))
                 response.headers.set('x-pathname', pathname)
                 return response
             }
 
             console.log('✅ Admin access granted')
+            requestHeaders.set('x-user-id', payload.userId.toString())
+            requestHeaders.set('x-user-role', payload.role)
+
             return NextResponse.next({
                 request: { headers: requestHeaders },
             })
@@ -55,7 +86,29 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // 3. Proteksi API Routes (Hanya untuk CUD operations - POST, PUT, PATCH, DELETE)
+    // 4. Proteksi API User Routes (untuk user biasa yang login)
+    if (pathname.startsWith('/api/user/')) {
+        const method = request.method
+
+        try {
+            if (!token) {
+                return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+            }
+
+            const payload = verifyToken(token)
+
+            requestHeaders.set('x-user-id', payload.userId.toString())
+            requestHeaders.set('x-user-role', payload.role)
+
+            return NextResponse.next({
+                request: { headers: requestHeaders },
+            })
+        } catch (error) {
+            return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
+        }
+    }
+
+    // 5. Proteksi API Routes Admin (Hanya untuk CUD operations - POST, PUT, PATCH, DELETE)
     if (pathname.startsWith('/api/')) {
         const method = request.method
         const isCUDOperation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)

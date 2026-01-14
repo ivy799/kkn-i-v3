@@ -20,7 +20,7 @@ export function Navbar({ user }: NavbarProps) {
     { title: "UMKM", url: "/business" },
   ]
 
-  // Only show Dashboard button for admins
+  // Show Dashboard button for admins, User Dashboard for regular users
   const authConfig = user
     ? user.role === 'ADMIN'
       ? {
@@ -32,8 +32,8 @@ export function Navbar({ user }: NavbarProps) {
       }
       : {
         login: {
-          text: user.username || "User",
-          url: "#", // Non-admin users get a placeholder button
+          text: "Dashboard Saya",
+          url: "/user-dashboard",
         },
         signup: null,
       }

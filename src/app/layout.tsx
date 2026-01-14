@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner"
-import { LayoutWrapper } from "@/components/layout-wrapper"
+import { LayoutWrapper } from "@/components/layout-wrapper";
 import { getCurrentUser } from "@/lib/auth"
 
 export const metadata: Metadata = {
