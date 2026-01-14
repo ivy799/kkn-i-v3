@@ -73,7 +73,6 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // 4. Proteksi API User Routes (/api/user/*) - Semua method butuh auth
     if (pathname.startsWith('/api/user/')) {
         if (!token) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })

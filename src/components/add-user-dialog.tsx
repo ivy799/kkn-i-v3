@@ -11,6 +11,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -30,14 +40,19 @@ interface AddUserDialogProps {
 export function AddUserDialog({ children, onSuccess }: AddUserDialogProps) {
     const [open, setOpen] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
+    const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
     const [formData, setFormData] = React.useState({
         username: "",
         password: "",
         role: "USER"
     })
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        setConfirmDialogOpen(true)
+    }
+
+    const handleConfirmSubmit = async () => {
         setLoading(true)
 
         try {
@@ -53,6 +68,7 @@ export function AddUserDialog({ children, onSuccess }: AddUserDialogProps) {
 
             if (response.ok) {
                 toast.success('Pengguna berhasil ditambahkan')
+                setConfirmDialogOpen(false)
                 setOpen(false)
                 setFormData({ username: "", password: "", role: "USER" })
                 onSuccess()
@@ -128,6 +144,23 @@ export function AddUserDialog({ children, onSuccess }: AddUserDialogProps) {
                     </DialogFooter>
                 </form>
             </DialogContent>
+
+            <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Konfirmasi Tambah Pengguna</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Apakah Anda yakin ingin menambahkan pengguna ini? Pastikan semua data sudah benar.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+                            {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Dialog>
     )
 }

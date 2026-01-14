@@ -11,6 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -36,6 +46,7 @@ interface EditTourismDialogProps {
 export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
   const [formData, setFormData] = React.useState({
     name: tourism.name || "",
     description: tourism.description || "",
@@ -62,8 +73,12 @@ export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismD
     }
   }, [open, tourism])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setConfirmDialogOpen(true)
+  }
+
+  const handleConfirmSubmit = async () => {
     setLoading(true)
 
     try {
@@ -79,6 +94,7 @@ export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismD
       })
 
       if (response.ok) {
+        setConfirmDialogOpen(false)
         setOpen(false)
         onSuccess()
       }
@@ -201,6 +217,23 @@ export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismD
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi Edit Wisata</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin mengubah data tempat wisata ini? Pastikan semua data sudah benar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

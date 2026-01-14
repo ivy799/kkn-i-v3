@@ -11,6 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -30,6 +40,7 @@ interface AddBusinessDialogProps {
 export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
   const [images, setImages] = React.useState<File[]>([])
   const [imagePreviews, setImagePreviews] = React.useState<string[]>([])
   const [formData, setFormData] = React.useState({
@@ -48,7 +59,7 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
     const files = Array.from(e.target.files || [])
     if (files.length > 0) {
       setImages(files)
-      
+
       const previews: string[] = []
       files.forEach(file => {
         const reader = new FileReader()
@@ -63,8 +74,12 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setConfirmDialogOpen(true)
+  }
+
+  const handleConfirmSubmit = async () => {
     setLoading(true)
 
     try {
@@ -78,7 +93,7 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
       formDataToSend.append('maximumPrice', formData.maximumPrice)
       formDataToSend.append('address', formData.address)
       formDataToSend.append('status', formData.status)
-      
+
       images.forEach((image) => {
         formDataToSend.append('images', image)
       })
@@ -89,6 +104,7 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
       })
 
       if (response.ok) {
+        setConfirmDialogOpen(false)
         setOpen(false)
         setFormData({
           type: "",
@@ -146,7 +162,7 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="ownerName">Nama Pemilik *</Label>
@@ -267,6 +283,23 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi Tambah Bisnis</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin menambahkan bisnis ini? Pastikan semua data sudah benar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

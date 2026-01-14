@@ -11,6 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -45,6 +55,7 @@ interface EditBusinessDialogProps {
 export function EditBusinessDialog({ children, business, onSuccess }: EditBusinessDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
   const [formData, setFormData] = React.useState({
     type: business.type || "",
     name: business.name || "",
@@ -75,8 +86,12 @@ export function EditBusinessDialog({ children, business, onSuccess }: EditBusine
     }
   }, [open, business])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setConfirmDialogOpen(true)
+  }
+
+  const handleConfirmSubmit = async () => {
     setLoading(true)
 
     try {
@@ -93,6 +108,7 @@ export function EditBusinessDialog({ children, business, onSuccess }: EditBusine
       })
 
       if (response.ok) {
+        setConfirmDialogOpen(false)
         setOpen(false)
         onSuccess()
       }
@@ -136,7 +152,7 @@ export function EditBusinessDialog({ children, business, onSuccess }: EditBusine
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="ownerName">Nama Pemilik *</Label>
@@ -246,6 +262,23 @@ export function EditBusinessDialog({ children, business, onSuccess }: EditBusine
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi Edit Bisnis</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin mengubah data bisnis ini? Pastikan semua data sudah benar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

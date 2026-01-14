@@ -11,6 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -23,6 +33,7 @@ interface AddTourismDialogProps {
 export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
   const [images, setImages] = React.useState<File[]>([])
   const [imagePreviews, setImagePreviews] = React.useState<string[]>([])
   const [formData, setFormData] = React.useState({
@@ -40,7 +51,7 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
     const files = Array.from(e.target.files || [])
     if (files.length > 0) {
       setImages(files)
-      
+
       const previews: string[] = []
       files.forEach(file => {
         const reader = new FileReader()
@@ -55,8 +66,12 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setConfirmDialogOpen(true)
+  }
+
+  const handleConfirmSubmit = async () => {
     setLoading(true)
 
     try {
@@ -69,7 +84,7 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
       formDataToSend.append('openingHours', formData.openingHours)
       formDataToSend.append('closingHours', formData.closingHours)
       formDataToSend.append('contactPerson', formData.contactPerson)
-      
+
       images.forEach((image) => {
         formDataToSend.append('images', image)
       })
@@ -80,6 +95,7 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
       })
 
       if (response.ok) {
+        setConfirmDialogOpen(false)
         setOpen(false)
         setFormData({
           name: "",
@@ -238,6 +254,23 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi Tambah Wisata</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin menambahkan tempat wisata ini? Pastikan semua data sudah benar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

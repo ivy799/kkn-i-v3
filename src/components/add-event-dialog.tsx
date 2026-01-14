@@ -11,6 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -30,6 +40,7 @@ interface AddEventDialogProps {
 export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
   const [imageFile, setImageFile] = React.useState<File | null>(null)
   const [imagePreview, setImagePreview] = React.useState<string | null>(null)
   const [formData, setFormData] = React.useState({
@@ -53,8 +64,12 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setConfirmDialogOpen(true)
+  }
+
+  const handleConfirmSubmit = async () => {
     setLoading(true)
 
     try {
@@ -65,7 +80,7 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
       formDataToSend.append('startDate', new Date(formData.startDate).toISOString())
       formDataToSend.append('endDate', formData.endDate ? new Date(formData.endDate).toISOString() : '')
       formDataToSend.append('status', formData.status)
-      
+
       if (imageFile) {
         formDataToSend.append('image', imageFile)
       }
@@ -76,6 +91,7 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
       })
 
       if (response.ok) {
+        setConfirmDialogOpen(false)
         setOpen(false)
         setFormData({
           title: "",
@@ -119,7 +135,7 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
                 required
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="description">Deskripsi *</Label>
               <Textarea
@@ -211,6 +227,23 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi Tambah Acara</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin menambahkan acara ini? Pastikan semua data sudah benar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

@@ -11,6 +11,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -37,6 +47,7 @@ interface EditUserDialogProps {
 export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProps) {
     const [open, setOpen] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
+    const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
     const [formData, setFormData] = React.useState({
         username: user.username,
         password: "",
@@ -51,8 +62,12 @@ export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProp
         })
     }, [user])
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        setConfirmDialogOpen(true)
+    }
+
+    const handleConfirmSubmit = async () => {
         setLoading(true)
 
         try {
@@ -78,6 +93,7 @@ export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProp
 
             if (response.ok) {
                 toast.success('Pengguna berhasil diperbarui')
+                setConfirmDialogOpen(false)
                 setOpen(false)
                 onSuccess()
             } else {
@@ -151,6 +167,23 @@ export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProp
                     </DialogFooter>
                 </form>
             </DialogContent>
+
+            <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Konfirmasi Edit Pengguna</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Apakah Anda yakin ingin mengubah data pengguna ini? Pastikan semua data sudah benar.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmSubmit} disabled={loading}>
+                            {loading ? 'Menyimpan...' : 'Ya, Simpan'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Dialog>
     )
 }
