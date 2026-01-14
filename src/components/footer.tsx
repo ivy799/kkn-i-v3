@@ -14,7 +14,7 @@ export function Footer() {
             { name: "UMKM", href: "/businesses" },
         ],
         info: [
-            { name: "Tentang", href: "/About" },
+            { name: "Tentang", href: "/about" },
         ],
     }
 
