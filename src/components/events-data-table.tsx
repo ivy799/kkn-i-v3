@@ -25,6 +25,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
+import { getEventStatus, getEventStatusLabel } from "@/lib/eventUtils"
+
 interface Event {
   id: number
   title: string
@@ -33,7 +35,6 @@ interface Event {
   startDate: string
   endDate: string | null
   image: string | null
-  status: string
 }
 
 interface EventsDataTableProps {
@@ -79,13 +80,16 @@ export function EventsDataTable({ data, loading, onRefresh }: EventsDataTablePro
     })
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (event: Event) => {
+    const status = getEventStatus(event.startDate, event.endDate)
+    const label = getEventStatusLabel(status)
+
     const variants: Record<string, "default" | "secondary" | "destructive"> = {
       UPCOMING: "default",
       ONGOING: "secondary",
       COMPLETED: "destructive"
     }
-    return <Badge variant={variants[status] || "default"}>{status}</Badge>
+    return <Badge variant={variants[status] || "default"}>{label}</Badge>
   }
 
   return (
@@ -139,7 +143,7 @@ export function EventsDataTable({ data, loading, onRefresh }: EventsDataTablePro
                   <TableCell>
                     {event.endDate ? formatDate(event.endDate) : '-'}
                   </TableCell>
-                  <TableCell>{getStatusBadge(event.status)}</TableCell>
+                  <TableCell>{getStatusBadge(event)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <EditEventDialog event={event} onSuccess={onRefresh} onOperatingChange={setIsOperating}>

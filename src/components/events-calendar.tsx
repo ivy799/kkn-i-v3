@@ -6,12 +6,13 @@ import { format, isSameDay, isWithinInterval, parseISO } from "date-fns"
 import { id } from "date-fns/locale"
 import "react-day-picker/style.css"
 
+import { getEventStatus } from "@/lib/eventUtils"
+
 interface Event {
     id: number
     title: string | null
     startDate: string | null
     endDate: string | null
-    status: string
 }
 
 interface EventsCalendarProps {
@@ -69,15 +70,18 @@ export function EventsCalendar({ events, selectedDate, onDateSelect }: EventsCal
                 <span>{props.date.getDate()}</span>
                 {hasEvents && (
                     <div className="absolute -bottom-1 flex gap-0.5">
-                        {dateEvents.slice(0, 3).map((event, idx) => (
-                            <div
-                                key={idx}
-                                className={`w-1.5 h-1.5 rounded-full ${event.status === 'ONGOING' ? 'bg-green-500' :
-                                    event.status === 'UPCOMING' ? 'bg-green-500' :
-                                        'bg-gray-400'
-                                    }`}
-                            />
-                        ))}
+                        {dateEvents.slice(0, 3).map((event, idx) => {
+                            const status = event.startDate ? getEventStatus(event.startDate, event.endDate) : 'COMPLETED'
+                            return (
+                                <div
+                                    key={idx}
+                                    className={`w-1.5 h-1.5 rounded-full ${status === 'UPCOMING' ? 'bg-blue-500' :
+                                            status === 'ONGOING' ? 'bg-green-500' :
+                                                'bg-gray-400'
+                                        }`}
+                                />
+                            )
+                        })}
                     </div>
                 )}
             </div>

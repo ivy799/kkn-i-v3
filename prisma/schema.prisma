@@ -79,14 +79,13 @@ model Article {
 }
 
 model Event {
-  id          Int         @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String?
-  description String?     @db.Text
+  description String?   @db.Text
   location    String?
-  startDate   DateTime?   @map("start_date")
-  endDate     DateTime?   @map("end_date")
+  startDate   DateTime? @map("start_date")
+  endDate     DateTime? @map("end_date")
   image       String?
-  status      eventStatus @default(UPCOMING)
 
   @@map("events")
 }

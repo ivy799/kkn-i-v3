@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { format, isSameDay, parseISO, isWithinInterval } from "date-fns"
 import { id } from "date-fns/locale"
 import { EventCard } from "@/components/event-card"
 import { EventsCalendar } from "@/components/events-calendar"
 import { CalendarDays, List } from "lucide-react"
+import { getEventStatus } from "@/lib/eventUtils"
 
 interface Event {
     id: number
@@ -15,7 +16,6 @@ interface Event {
     startDate: string | null
     endDate: string | null
     image: string | null
-    status: string
 }
 
 export default function EventsPage() {
@@ -57,20 +57,26 @@ export default function EventsPage() {
         : events
 
     // Sort events: ONGOING first, then UPCOMING by date, then COMPLETED
-    const sortedEvents = [...filteredEvents].sort((a, b) => {
-        const statusOrder = { ONGOING: 0, UPCOMING: 1, COMPLETED: 2 }
-        const orderA = statusOrder[a.status as keyof typeof statusOrder] ?? 3
-        const orderB = statusOrder[b.status as keyof typeof statusOrder] ?? 3
+    const sortedEvents = useMemo(() => {
+        return [...filteredEvents].sort((a, b) => {
+            // Calculate status dynamically
+            const statusA = a.startDate ? getEventStatus(a.startDate, a.endDate) : 'UPCOMING'
+            const statusB = b.startDate ? getEventStatus(b.startDate, b.endDate) : 'UPCOMING'
 
-        if (orderA !== orderB) return orderA - orderB
+            const statusOrder = { ONGOING: 0, UPCOMING: 1, COMPLETED: 2 }
+            const orderA = statusOrder[statusA as keyof typeof statusOrder] ?? 3
+            const orderB = statusOrder[statusB as keyof typeof statusOrder] ?? 3
 
-        // If same status, sort by date
-        const dateA = a.startDate ? new Date(a.startDate).getTime() : 0
-        const dateB = b.startDate ? new Date(b.startDate).getTime() : 0
+            if (orderA !== orderB) return orderA - orderB
 
-        // For upcoming/ongoing, earlier first; for completed, recent first
-        return a.status === "COMPLETED" ? dateB - dateA : dateA - dateB
-    })
+            // If same status, sort by date
+            const dateA = a.startDate ? new Date(a.startDate).getTime() : 0
+            const dateB = b.startDate ? new Date(b.startDate).getTime() : 0
+
+            // For upcoming/ongoing, earlier first; for completed, recent first
+            return statusA === "COMPLETED" ? dateB - dateA : dateA - dateB
+        })
+    }, [filteredEvents])
 
     return (
         <div className="min-h-screen bg-gray-50">

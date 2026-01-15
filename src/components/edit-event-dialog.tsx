@@ -40,7 +40,6 @@ interface Event {
   startDate: string
   endDate: string | null
   image: string | null
-  status: string
 }
 
 interface EditEventDialogProps {
@@ -62,7 +61,6 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
     location: event.location,
     startDate: event.startDate ? new Date(event.startDate).toISOString().slice(0, 16) : "",
     endDate: event.endDate ? new Date(event.endDate).toISOString().slice(0, 16) : "",
-    status: event.status,
   })
 
   React.useEffect(() => {
@@ -73,7 +71,6 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
         location: event.location,
         startDate: event.startDate ? new Date(event.startDate).toISOString().slice(0, 16) : "",
         endDate: event.endDate ? new Date(event.endDate).toISOString().slice(0, 16) : "",
-        status: event.status,
       })
       setImageFile(null)
       setImagePreview(event.image || null)
@@ -110,7 +107,6 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
       if (formData.endDate) {
         formDataToSend.append('endDate', new Date(formData.endDate).toISOString())
       }
-      formDataToSend.append('status', formData.status)
 
       if (imageFile) {
         formDataToSend.append('image', imageFile)
@@ -221,22 +217,6 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
               </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="status">Status</Label>
-              <Select
-                value={formData.status}
-                onValueChange={(value) => setFormData({ ...formData, status: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="UPCOMING">Akan Datang</SelectItem>
-                  <SelectItem value="ONGOING">Sedang Berlangsung</SelectItem>
-                  <SelectItem value="COMPLETED">Selesai</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
 
           <DialogFooter>

@@ -2,7 +2,8 @@
 
 import { format, isSameDay } from "date-fns"
 import { id } from "date-fns/locale"
-import { CalendarIcon, MapPin, Clock } from "lucide-react"
+import { CalendarIcon, MapPin } from "lucide-react"
+import { getEventStatus, getEventStatusLabel } from "@/lib/eventUtils"
 
 interface EventCardProps {
     event: {
@@ -13,18 +14,20 @@ interface EventCardProps {
         startDate: string | null
         endDate: string | null
         image: string | null
-        status: string
     }
 }
 
-const statusColors: Record<string, { bg: string; text: string; label: string }> = {
-    UPCOMING: { bg: "bg-green-100", text: "text-green-800", label: "Akan Datang" },
-    ONGOING: { bg: "bg-green-100", text: "text-green-800", label: "Berlangsung" },
-    COMPLETED: { bg: "bg-gray-100", text: "text-gray-600", label: "Selesai" },
+const statusColors: Record<string, { bg: string; text: string }> = {
+    UPCOMING: { bg: "bg-green-100", text: "text-green-800" },
+    ONGOING: { bg: "bg-green-100", text: "text-green-800" },
+    COMPLETED: { bg: "bg-gray-100", text: "text-gray-600" },
 }
 
 export function EventCard({ event }: EventCardProps) {
-    const statusStyle = statusColors[event.status] || statusColors.UPCOMING
+    // Calculate status dynamically from dates
+    const status = event.startDate ? getEventStatus(event.startDate, event.endDate) : 'UPCOMING'
+    const statusLabel = getEventStatusLabel(status)
+    const statusStyle = statusColors[status] || statusColors.UPCOMING
 
     const formatDateRange = () => {
         if (!event.startDate) return "Tanggal belum ditentukan"
@@ -57,7 +60,7 @@ export function EventCard({ event }: EventCardProps) {
                 {/* Status Badge */}
                 <div className="absolute top-3 right-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
-                        {statusStyle.label}
+                        {statusLabel}
                     </span>
                 </div>
             </div>

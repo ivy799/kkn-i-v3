@@ -138,12 +138,24 @@ export function EditBusinessDialog({ children, business, onSuccess, onOperatingC
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="type">Tipe Bisnis *</Label>
-              <Input
-                id="type"
+              <Select
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                onValueChange={(value) => setFormData({ ...formData, type: value })}
                 required
-              />
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih tipe bisnis" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Kuliner">Kuliner</SelectItem>
+                  <SelectItem value="Jasa">Jasa</SelectItem>
+                  <SelectItem value="Retail">Retail</SelectItem>
+                  <SelectItem value="Pertanian">Pertanian</SelectItem>
+                  <SelectItem value="Kerajinan">Kerajinan</SelectItem>
+                  <SelectItem value="Pariwisata">Pariwisata</SelectItem>
+                  <SelectItem value="Lainnya">Lainnya</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid gap-2">

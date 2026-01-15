@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
         const startDate = formData.get('startDate') as string;
         const endDate = formData.get('endDate') as string | null;
         const image = formData.get('image') as File | null;
-        const status = formData.get('status') as string;
 
         if (!title || !description || !location || !startDate) {
             return NextResponse.json(
@@ -45,7 +44,6 @@ export async function POST(request: NextRequest) {
                 startDate: new Date(startDate),
                 endDate: endDate ? new Date(endDate) : null,
                 image: imageUrl,
-                status: status as any || 'UPCOMING',
             },
         });
 
@@ -75,7 +73,6 @@ export async function GET(request: NextRequest) {
                 startDate: true,
                 endDate: true,
                 image: true,
-                status: true,
             },
             orderBy: {
                 startDate: 'desc'

@@ -50,7 +50,6 @@ export function AddEventDialog({ children, onSuccess, onOperatingChange }: AddEv
     location: "",
     startDate: "",
     endDate: "",
-    status: "UPCOMING",
   })
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +80,6 @@ export function AddEventDialog({ children, onSuccess, onOperatingChange }: AddEv
       formDataToSend.append('location', formData.location)
       formDataToSend.append('startDate', new Date(formData.startDate).toISOString())
       formDataToSend.append('endDate', formData.endDate ? new Date(formData.endDate).toISOString() : '')
-      formDataToSend.append('status', formData.status)
 
       if (imageFile) {
         formDataToSend.append('image', imageFile)
@@ -101,7 +99,6 @@ export function AddEventDialog({ children, onSuccess, onOperatingChange }: AddEv
           location: "",
           startDate: "",
           endDate: "",
-          status: "UPCOMING",
         })
         setImageFile(null)
         setImagePreview(null)
@@ -202,22 +199,6 @@ export function AddEventDialog({ children, onSuccess, onOperatingChange }: AddEv
               </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="status">Status</Label>
-              <Select
-                value={formData.status}
-                onValueChange={(value) => setFormData({ ...formData, status: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="UPCOMING">Akan Datang</SelectItem>
-                  <SelectItem value="ONGOING">Sedang Berlangsung</SelectItem>
-                  <SelectItem value="COMPLETED">Selesai</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
 
           <DialogFooter>

@@ -25,7 +25,6 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
         const startDate = formData.get('startDate') as string;
         const endDate = formData.get('endDate') as string | null;
         const image = formData.get('image') as File | null;
-        const status = formData.get('status') as string;
 
         let imageUrl: string | null = null;
 
@@ -58,7 +57,6 @@ export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: str
             location,
             startDate: startDate ? new Date(startDate) : undefined,
             endDate: endDate ? new Date(endDate) : null,
-            status: status as any,
         };
 
         if (imageUrl) {
@@ -167,7 +165,6 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
                 startDate: true,
                 endDate: true,
                 image: true,
-                status: true,
             }
         })
 
