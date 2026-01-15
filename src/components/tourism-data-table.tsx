@@ -126,7 +126,7 @@ export function TourismDataTable({ data, loading, onRefresh }: TourismDataTableP
                   <TableCell>{tourism.address || '-'}</TableCell>
                   <TableCell>{formatPrice(tourism.ticketPrice)}</TableCell>
                   <TableCell>
-                    {tourism.openingHours && tourism.closingHours 
+                    {tourism.openingHours && tourism.closingHours
                       ? `${tourism.openingHours} - ${tourism.closingHours}`
                       : '-'
                     }
@@ -168,7 +168,7 @@ export function TourismDataTable({ data, loading, onRefresh }: TourismDataTableP
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={deleting}>
+            <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-red-600 hover:bg-red-700">
               {deleting ? 'Menghapus...' : 'Hapus'}
             </AlertDialogAction>
           </AlertDialogFooter>
