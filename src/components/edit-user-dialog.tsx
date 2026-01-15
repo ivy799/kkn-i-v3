@@ -42,9 +42,10 @@ interface EditUserDialogProps {
     children: React.ReactNode
     user: User
     onSuccess: () => void
+    onOperatingChange?: (operating: boolean) => void
 }
 
-export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProps) {
+export function EditUserDialog({ children, user, onSuccess, onOperatingChange }: EditUserDialogProps) {
     const [open, setOpen] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
     const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -69,6 +70,7 @@ export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProp
 
     const handleConfirmSubmit = async () => {
         setLoading(true)
+        onOperatingChange?.(true)
 
         try {
             const payload: any = {
@@ -104,6 +106,7 @@ export function EditUserDialog({ children, user, onSuccess }: EditUserDialogProp
             toast.error('Terjadi kesalahan')
         } finally {
             setLoading(false)
+            onOperatingChange?.(false)
         }
     }
 

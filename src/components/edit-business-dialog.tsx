@@ -50,9 +50,10 @@ interface EditBusinessDialogProps {
   children: React.ReactNode
   business: Business
   onSuccess: () => void
+  onOperatingChange?: (operating: boolean) => void
 }
 
-export function EditBusinessDialog({ children, business, onSuccess }: EditBusinessDialogProps) {
+export function EditBusinessDialog({ children, business, onSuccess, onOperatingChange }: EditBusinessDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -93,6 +94,7 @@ export function EditBusinessDialog({ children, business, onSuccess }: EditBusine
 
   const handleConfirmSubmit = async () => {
     setLoading(true)
+    onOperatingChange?.(true)
 
     try {
       const response = await fetch(`/api/business/${business.id}`, {
@@ -116,6 +118,7 @@ export function EditBusinessDialog({ children, business, onSuccess }: EditBusine
       console.error('Error updating business:', error)
     } finally {
       setLoading(false)
+      onOperatingChange?.(false)
     }
   }
 

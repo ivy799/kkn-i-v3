@@ -46,12 +46,14 @@ export function EventsDataTable({ data, loading, onRefresh }: EventsDataTablePro
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [eventToDelete, setEventToDelete] = React.useState<number | null>(null)
   const [deleting, setDeleting] = React.useState(false)
+  const [isOperating, setIsOperating] = React.useState(false)
 
   const handleDelete = async () => {
     if (!eventToDelete) return
 
     try {
       setDeleting(true)
+      setIsOperating(true)
       const response = await fetch(`/api/event/${eventToDelete}`, {
         method: 'DELETE',
       })
@@ -65,6 +67,7 @@ export function EventsDataTable({ data, loading, onRefresh }: EventsDataTablePro
       console.error('Error deleting event:', error)
     } finally {
       setDeleting(false)
+      setIsOperating(false)
     }
   }
 
@@ -92,10 +95,10 @@ export function EventsDataTable({ data, loading, onRefresh }: EventsDataTablePro
           <h2 className="text-2xl font-bold tracking-tight">Acara</h2>
           <p className="text-muted-foreground">Kelola data acara desa</p>
         </div>
-        <AddEventDialog onSuccess={onRefresh}>
-          <Button>
+        <AddEventDialog onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+          <Button disabled={isOperating || loading}>
             <PlusIcon className="mr-2 h-4 w-4" />
-            Tambah Acara
+            Tambah Event
           </Button>
         </AddEventDialog>
       </div>
@@ -139,14 +142,15 @@ export function EventsDataTable({ data, loading, onRefresh }: EventsDataTablePro
                   <TableCell>{getStatusBadge(event.status)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <EditEventDialog event={event} onSuccess={onRefresh}>
-                        <Button variant="ghost" size="icon">
+                      <EditEventDialog event={event} onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+                        <Button variant="ghost" size="icon" disabled={isOperating || loading}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                       </EditEventDialog>
                       <Button
                         variant="ghost"
                         size="icon"
+                        disabled={isOperating || loading}
                         onClick={() => {
                           setEventToDelete(event.id)
                           setDeleteDialogOpen(true)

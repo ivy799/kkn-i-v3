@@ -41,9 +41,10 @@ interface EditTourismDialogProps {
   children: React.ReactNode
   tourism: TourismSpot
   onSuccess: () => void
+  onOperatingChange?: (operating: boolean) => void
 }
 
-export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismDialogProps) {
+export function EditTourismDialog({ children, tourism, onSuccess, onOperatingChange }: EditTourismDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -80,6 +81,7 @@ export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismD
 
   const handleConfirmSubmit = async () => {
     setLoading(true)
+    onOperatingChange?.(true)
 
     try {
       const response = await fetch(`/api/tourism/${tourism.id}`, {
@@ -102,6 +104,7 @@ export function EditTourismDialog({ children, tourism, onSuccess }: EditTourismD
       console.error('Error updating tourism spot:', error)
     } finally {
       setLoading(false)
+      onOperatingChange?.(false)
     }
   }
 

@@ -47,9 +47,10 @@ interface EditEventDialogProps {
   children: React.ReactNode
   event: Event
   onSuccess: () => void
+  onOperatingChange?: (operating: boolean) => void
 }
 
-export function EditEventDialog({ children, event, onSuccess }: EditEventDialogProps) {
+export function EditEventDialog({ children, event, onSuccess, onOperatingChange }: EditEventDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -82,6 +83,7 @@ export function EditEventDialog({ children, event, onSuccess }: EditEventDialogP
 
   const handleConfirmSubmit = async () => {
     setLoading(true)
+    onOperatingChange?.(true)
 
     try {
       const response = await fetch(`/api/event/${event.id}`, {
@@ -105,6 +107,7 @@ export function EditEventDialog({ children, event, onSuccess }: EditEventDialogP
       console.error('Error updating event:', error)
     } finally {
       setLoading(false)
+      onOperatingChange?.(false)
     }
   }
 

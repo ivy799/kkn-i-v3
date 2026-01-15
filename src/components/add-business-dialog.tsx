@@ -35,9 +35,10 @@ import {
 interface AddBusinessDialogProps {
   children: React.ReactNode
   onSuccess: () => void
+  onOperatingChange?: (operating: boolean) => void
 }
 
-export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProps) {
+export function AddBusinessDialog({ children, onSuccess, onOperatingChange }: AddBusinessDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -81,6 +82,7 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
 
   const handleConfirmSubmit = async () => {
     setLoading(true)
+    onOperatingChange?.(true)
 
     try {
       const formDataToSend = new FormData()
@@ -125,6 +127,7 @@ export function AddBusinessDialog({ children, onSuccess }: AddBusinessDialogProp
       console.error('Error creating business:', error)
     } finally {
       setLoading(false)
+      onOperatingChange?.(false)
     }
   }
 

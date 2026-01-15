@@ -28,9 +28,10 @@ import { Textarea } from "@/components/ui/textarea"
 interface AddTourismDialogProps {
   children: React.ReactNode
   onSuccess: () => void
+  onOperatingChange?: (operating: boolean) => void
 }
 
-export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps) {
+export function AddTourismDialog({ children, onSuccess, onOperatingChange }: AddTourismDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -73,6 +74,7 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
 
   const handleConfirmSubmit = async () => {
     setLoading(true)
+    onOperatingChange?.(true)
 
     try {
       const formDataToSend = new FormData()
@@ -112,9 +114,10 @@ export function AddTourismDialog({ children, onSuccess }: AddTourismDialogProps)
         onSuccess()
       }
     } catch (error) {
-      console.error('Error creating tourism spot:', error)
+      console.error('Error creating tourism:', error)
     } finally {
       setLoading(false)
+      onOperatingChange?.(false)
     }
   }
 

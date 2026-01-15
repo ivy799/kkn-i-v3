@@ -43,12 +43,14 @@ export function UsersDataTable({ data, loading, onRefresh }: UsersDataTableProps
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
     const [userToDelete, setUserToDelete] = React.useState<number | null>(null)
     const [deleting, setDeleting] = React.useState(false)
+    const [isOperating, setIsOperating] = React.useState(false)
 
     const handleDelete = async () => {
         if (!userToDelete) return
 
         try {
             setDeleting(true)
+            setIsOperating(true)
             const response = await fetch(`/api/user/${userToDelete}`, {
                 method: 'DELETE',
             })
@@ -66,6 +68,7 @@ export function UsersDataTable({ data, loading, onRefresh }: UsersDataTableProps
             toast.error('Terjadi kesalahan')
         } finally {
             setDeleting(false)
+            setIsOperating(false)
         }
     }
 
@@ -92,10 +95,10 @@ export function UsersDataTable({ data, loading, onRefresh }: UsersDataTableProps
                     <h2 className="text-2xl font-bold tracking-tight">Pengguna</h2>
                     <p className="text-muted-foreground">Kelola data pengguna sistem</p>
                 </div>
-                <AddUserDialog onSuccess={onRefresh}>
-                    <Button>
+                <AddUserDialog onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+                    <Button disabled={isOperating || loading}>
                         <PlusIcon className="mr-2 h-4 w-4" />
-                        Tambah Pengguna
+                        Tambah User
                     </Button>
                 </AddUserDialog>
             </div>
@@ -133,14 +136,15 @@ export function UsersDataTable({ data, loading, onRefresh }: UsersDataTableProps
                                     <TableCell>{formatDate(user.createdAt)}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <EditUserDialog user={user} onSuccess={onRefresh}>
-                                                <Button variant="ghost" size="icon">
+                                            <EditUserDialog user={user} onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+                                                <Button variant="ghost" size="icon" disabled={isOperating || loading}>
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>
                                             </EditUserDialog>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
+                                                disabled={isOperating || loading}
                                                 onClick={() => {
                                                     setUserToDelete(user.id)
                                                     setDeleteDialogOpen(true)

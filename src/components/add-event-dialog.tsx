@@ -35,9 +35,10 @@ import {
 interface AddEventDialogProps {
   children: React.ReactNode
   onSuccess: () => void
+  onOperatingChange?: (operating: boolean) => void
 }
 
-export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
+export function AddEventDialog({ children, onSuccess, onOperatingChange }: AddEventDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -71,6 +72,7 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
 
   const handleConfirmSubmit = async () => {
     setLoading(true)
+    onOperatingChange?.(true)
 
     try {
       const formDataToSend = new FormData()
@@ -109,6 +111,7 @@ export function AddEventDialog({ children, onSuccess }: AddEventDialogProps) {
       console.error('Error creating event:', error)
     } finally {
       setLoading(false)
+      onOperatingChange?.(false)
     }
   }
 

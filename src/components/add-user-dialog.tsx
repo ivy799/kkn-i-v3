@@ -35,9 +35,10 @@ import { toast } from "sonner"
 interface AddUserDialogProps {
     children: React.ReactNode
     onSuccess: () => void
+    onOperatingChange?: (operating: boolean) => void
 }
 
-export function AddUserDialog({ children, onSuccess }: AddUserDialogProps) {
+export function AddUserDialog({ children, onSuccess, onOperatingChange }: AddUserDialogProps) {
     const [open, setOpen] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
     const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
@@ -54,6 +55,7 @@ export function AddUserDialog({ children, onSuccess }: AddUserDialogProps) {
 
     const handleConfirmSubmit = async () => {
         setLoading(true)
+        onOperatingChange?.(true)
 
         try {
             const response = await fetch('/api/user', {
@@ -80,6 +82,7 @@ export function AddUserDialog({ children, onSuccess }: AddUserDialogProps) {
             toast.error('Terjadi kesalahan')
         } finally {
             setLoading(false)
+            onOperatingChange?.(false)
         }
     }
 

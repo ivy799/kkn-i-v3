@@ -46,13 +46,15 @@ export function TourismDataTable({ data, loading, onRefresh }: TourismDataTableP
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [tourismToDelete, setTourismToDelete] = React.useState<number | null>(null)
   const [deleting, setDeleting] = React.useState(false)
+  const [isOperating, setIsOperating] = React.useState(false)
 
   const handleDelete = async () => {
     if (!tourismToDelete) return
 
     try {
       setDeleting(true)
-      const response = await fetch(`/api/tourism/${tourismToDelete}`, {
+      setIsOperating(true)
+      const response = await fetch(`/api/wisata/${tourismToDelete}`, {
         method: 'DELETE',
       })
 
@@ -62,9 +64,10 @@ export function TourismDataTable({ data, loading, onRefresh }: TourismDataTableP
         setTourismToDelete(null)
       }
     } catch (error) {
-      console.error('Error deleting tourism spot:', error)
+      console.error('Error deleting tourism:', error)
     } finally {
       setDeleting(false)
+      setIsOperating(false)
     }
   }
 
@@ -84,8 +87,8 @@ export function TourismDataTable({ data, loading, onRefresh }: TourismDataTableP
           <h2 className="text-2xl font-bold tracking-tight">Wisata</h2>
           <p className="text-muted-foreground">Kelola data tempat wisata desa</p>
         </div>
-        <AddTourismDialog onSuccess={onRefresh}>
-          <Button>
+        <AddTourismDialog onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+          <Button disabled={isOperating || loading}>
             <PlusIcon className="mr-2 h-4 w-4" />
             Tambah Wisata
           </Button>
@@ -134,14 +137,15 @@ export function TourismDataTable({ data, loading, onRefresh }: TourismDataTableP
                   <TableCell>{tourism.contactPerson || '-'}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <EditTourismDialog tourism={tourism} onSuccess={onRefresh}>
-                        <Button variant="ghost" size="icon">
+                      <EditTourismDialog tourism={tourism} onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+                        <Button variant="ghost" size="icon" disabled={isOperating || loading}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                       </EditTourismDialog>
                       <Button
                         variant="ghost"
                         size="icon"
+                        disabled={isOperating || loading}
                         onClick={() => {
                           setTourismToDelete(tourism.id)
                           setDeleteDialogOpen(true)

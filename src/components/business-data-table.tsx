@@ -49,12 +49,14 @@ export function BusinessDataTable({ data, loading, onRefresh }: BusinessDataTabl
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [businessToDelete, setBusinessToDelete] = React.useState<number | null>(null)
   const [deleting, setDeleting] = React.useState(false)
+  const [isOperating, setIsOperating] = React.useState(false)
 
   const handleDelete = async () => {
     if (!businessToDelete) return
 
     try {
       setDeleting(true)
+      setIsOperating(true)
       const response = await fetch(`/api/business/${businessToDelete}`, {
         method: 'DELETE',
       })
@@ -68,6 +70,7 @@ export function BusinessDataTable({ data, loading, onRefresh }: BusinessDataTabl
       console.error('Error deleting business:', error)
     } finally {
       setDeleting(false)
+      setIsOperating(false)
     }
   }
 
@@ -101,8 +104,8 @@ export function BusinessDataTable({ data, loading, onRefresh }: BusinessDataTabl
           <h2 className="text-2xl font-bold tracking-tight">Bisnis</h2>
           <p className="text-muted-foreground">Kelola data bisnis desa</p>
         </div>
-        <AddBusinessDialog onSuccess={onRefresh}>
-          <Button>
+        <AddBusinessDialog onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+          <Button disabled={isOperating || loading}>
             <PlusIcon className="mr-2 h-4 w-4" />
             Tambah Bisnis
           </Button>
@@ -150,14 +153,15 @@ export function BusinessDataTable({ data, loading, onRefresh }: BusinessDataTabl
                   <TableCell>{getStatusBadge(business.status)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <EditBusinessDialog business={business} onSuccess={onRefresh}>
-                        <Button variant="ghost" size="icon">
+                      <EditBusinessDialog business={business} onSuccess={onRefresh} onOperatingChange={setIsOperating}>
+                        <Button variant="ghost" size="icon" disabled={isOperating || loading}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                       </EditBusinessDialog>
                       <Button
                         variant="ghost"
                         size="icon"
+                        disabled={isOperating || loading}
                         onClick={() => {
                           setBusinessToDelete(business.id)
                           setDeleteDialogOpen(true)
