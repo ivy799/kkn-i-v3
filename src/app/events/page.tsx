@@ -123,10 +123,10 @@ export default function EventsPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Calendar - Hidden on mobile when list view is active */}
-                    <div className={`lg:col-span-1 ${view === "list" ? "hidden md:block" : ""}`}>
-                        <div className="sticky top-4">
+                    <div className={`md:col-span-3 lg:col-span-1 ${view === "list" ? "hidden md:block" : ""}`}>
+                        <div className="md:max-w-2xl md:mx-auto lg:max-w-none lg:mx-0 sticky top-4">
                             <EventsCalendar
                                 events={events}
                                 selectedDate={selectedDate}
@@ -136,7 +136,7 @@ export default function EventsPage() {
                     </div>
 
                     {/* Events List - Hidden on mobile when calendar view is active */}
-                    <div className={`lg:col-span-2 ${view === "calendar" ? "hidden md:block" : ""}`}>
+                    <div className={`md:col-span-3 lg:col-span-2 ${view === "calendar" ? "hidden md:block" : ""}`}>
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-2xl font-bold text-gray-900">
                                 {selectedDate

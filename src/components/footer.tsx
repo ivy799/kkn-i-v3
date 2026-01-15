@@ -17,7 +17,7 @@ export function Footer() {
             { name: "Tentang", href: "/about" },
         ],
     }
-    d
+
     return (
         <footer className="relative w-full bg-green-950 text-white">
             {/* Background Image with Overlay */}

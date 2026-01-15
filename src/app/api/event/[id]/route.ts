@@ -89,11 +89,14 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
     try {
         const { id } = await ctx.params;
 
+        console.log(`[DELETE EVENT] Starting deletion for ID: ${id}`);
+
         const find_data = await getPrisma.event.findUnique({
             where: { id: parseInt(id) }
         })
 
         if (!find_data) {
+            console.log(`[DELETE EVENT] Event not found: ${id}`);
             return NextResponse.json(
                 { message: 'Event not found' },
                 { status: 404 }
@@ -101,16 +104,39 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
         }
 
         // Hapus gambar dari Supabase Storage jika ada
+        let deletionError: string | null = null;
         if (find_data.image) {
+            console.log(`[DELETE EVENT] Processing image: ${find_data.image}`);
             const filePath = extractFilePathFromUrl(find_data.image, 'events');
+
             if (filePath) {
-                await deleteFile('events', filePath);
+                const deleteResult = await deleteFile('events', filePath);
+                if (!deleteResult.success) {
+                    deletionError = `Failed to delete image ${find_data.image}: ${deleteResult.error}`;
+                    console.error(`[DELETE EVENT]`, deletionError);
+                }
+            } else {
+                deletionError = `Could not extract file path from URL: ${find_data.image}`;
+                console.error(`[DELETE EVENT]`, deletionError);
             }
         }
 
         const delete_data = await getPrisma.event.delete({
             where: { id: parseInt(id) }
         })
+
+        console.log(`[DELETE EVENT] Successfully deleted event: ${id}`);
+
+        // Return response with warning if file couldn't be deleted
+        if (deletionError) {
+            console.warn(`[DELETE EVENT] Completed with file deletion error`);
+            return NextResponse.json({
+                message: 'Event deleted but image could not be removed from storage',
+                data: delete_data,
+                success: true,
+                warning: deletionError
+            })
+        }
 
         return NextResponse.json({
             message: 'Event deleted successfully',
@@ -119,7 +145,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
         })
 
     } catch (error) {
-        console.error('Error deleting event:', error);
+        console.error('[DELETE EVENT ERROR]', error);
         return NextResponse.json(
             { message: 'Error deleting event' },
             { status: 500 }

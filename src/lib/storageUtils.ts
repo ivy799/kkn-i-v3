@@ -81,18 +81,21 @@ export async function deleteFile(
     filePath: string
 ): Promise<{ success: boolean; error?: string }> {
     try {
-        const { error } = await supabaseAdmin.storage
+        console.log(`[DELETE FILE] Attempting to delete from bucket "${bucket}": ${filePath}`);
+
+        const { data, error } = await supabaseAdmin.storage
             .from(bucket)
             .remove([filePath]);
 
         if (error) {
-            console.error('Error deleting file from Supabase:', error);
+            console.error(`[DELETE FILE ERROR] Bucket: ${bucket}, Path: ${filePath}`, error);
             return { success: false, error: error.message };
         }
 
+        console.log(`[DELETE FILE SUCCESS] Deleted from bucket "${bucket}": ${filePath}`, data);
         return { success: true };
     } catch (error) {
-        console.error('Unexpected error deleting file:', error);
+        console.error(`[DELETE FILE EXCEPTION] Bucket: ${bucket}, Path: ${filePath}`, error);
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Unknown error',
@@ -119,12 +122,26 @@ export function getPublicUrl(bucket: string, filePath: string): string {
  */
 export function extractFilePathFromUrl(publicUrl: string, bucket: string): string | null {
     try {
+        if (!publicUrl || typeof publicUrl !== 'string') {
+            console.error('[EXTRACT PATH] Invalid URL:', publicUrl);
+            return null;
+        }
+
+        console.log(`[EXTRACT PATH] Extracting from URL: ${publicUrl}, Bucket: ${bucket}`);
+
         // Format URL: https://[project].supabase.co/storage/v1/object/public/[bucket]/[filepath]
         const urlPattern = new RegExp(`/storage/v1/object/public/${bucket}/(.+)$`);
         const match = publicUrl.match(urlPattern);
-        return match ? match[1] : null;
+
+        if (match && match[1]) {
+            console.log(`[EXTRACT PATH SUCCESS] Extracted path: ${match[1]}`);
+            return match[1];
+        } else {
+            console.error(`[EXTRACT PATH FAILED] No match found for URL: ${publicUrl}, Pattern: ${urlPattern}`);
+            return null;
+        }
     } catch (error) {
-        console.error('Error extracting file path from URL:', error);
+        console.error('[EXTRACT PATH ERROR] Error extracting file path from URL:', error);
         return null;
     }
 }

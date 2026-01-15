@@ -1,5 +1,6 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
+import { deleteFile, extractFilePathFromUrl } from '@/lib/storageUtils';
 
 export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
@@ -63,20 +64,66 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
     try {
         const { id } = await ctx.params;
 
+        console.log(`[DELETE TOURISM] Starting deletion for ID: ${id}`);
+
         const find_data = await getPrisma.tourismSpot.findUnique({
-            where: { id: parseInt(id) }
+            where: { id: parseInt(id) },
+            include: {
+                TourismSpotGallery: true
+            }
         });
 
         if (!find_data) {
+            console.log(`[DELETE TOURISM] Tourism spot not found: ${id}`);
             return NextResponse.json(
                 { message: 'Tourism spot not found' },
                 { status: 404 }
             );
         }
 
+        // Delete all gallery images from Supabase Storage
+        const deletionErrors: string[] = [];
+        if (find_data.TourismSpotGallery && find_data.TourismSpotGallery.length > 0) {
+            console.log(`[DELETE TOURISM] Found ${find_data.TourismSpotGallery.length} gallery images to delete`);
+
+            for (const gallery of find_data.TourismSpotGallery) {
+                if (gallery.media) {
+                    console.log(`[DELETE TOURISM] Processing gallery image: ${gallery.media}`);
+                    const filePath = extractFilePathFromUrl(gallery.media, 'tourism');
+
+                    if (filePath) {
+                        const deleteResult = await deleteFile('tourism', filePath);
+                        if (!deleteResult.success) {
+                            const errorMsg = `Failed to delete image ${gallery.media}: ${deleteResult.error}`;
+                            console.error(`[DELETE TOURISM]`, errorMsg);
+                            deletionErrors.push(errorMsg);
+                        }
+                    } else {
+                        const errorMsg = `Could not extract file path from URL: ${gallery.media}`;
+                        console.error(`[DELETE TOURISM]`, errorMsg);
+                        deletionErrors.push(errorMsg);
+                    }
+                }
+            }
+        }
+
+        // Delete the tourism spot (cascade will delete gallery entries and facilities)
         const delete_data = await getPrisma.tourismSpot.delete({
             where: { id: parseInt(id) }
         });
+
+        console.log(`[DELETE TOURISM] Successfully deleted tourism spot: ${id}`);
+
+        // Return response with warnings if some files couldn't be deleted
+        if (deletionErrors.length > 0) {
+            console.warn(`[DELETE TOURISM] Completed with ${deletionErrors.length} file deletion errors`);
+            return NextResponse.json({
+                message: 'Tourism spot deleted but some images could not be removed from storage',
+                data: delete_data,
+                success: true,
+                warnings: deletionErrors
+            });
+        }
 
         return NextResponse.json({
             message: 'Tourism spot deleted successfully',
@@ -85,7 +132,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
         });
 
     } catch (error) {
-        console.error('Error deleting tourism spot:', error);
+        console.error('[DELETE TOURISM ERROR]', error);
         return NextResponse.json(
             { message: 'Error deleting tourism spot' },
             { status: 500 }
@@ -96,7 +143,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
 export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await ctx.params;
-        
+
         const tourismSpot = await getPrisma.tourismSpot.findUnique({
             where: { id: parseInt(id) },
             select: {

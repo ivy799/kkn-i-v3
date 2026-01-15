@@ -86,6 +86,7 @@ export default async function Home() {
           showMoreButton={true}
           showMoreUrl="/wisata"
           showMoreText="Lihat Lebih Banyak"
+          className="p-5"
         />
       </div>
       <BentoGallery items={galleryItems} />

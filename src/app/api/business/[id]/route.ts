@@ -1,5 +1,6 @@
 import { getPrisma } from '@/lib/prismaClient';
 import { NextResponse, NextRequest } from 'next/server';
+import { deleteFile, extractFilePathFromUrl } from '@/lib/storageUtils';
 
 export async function PUT(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
@@ -75,20 +76,66 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
     try {
         const { id } = await ctx.params;
 
+        console.log(`[DELETE BUSINESS] Starting deletion for ID: ${id}`);
+
         const find_data = await getPrisma.business.findUnique({
-            where: { id: parseInt(id) }
+            where: { id: parseInt(id) },
+            include: {
+                BusinessGallery: true
+            }
         });
 
         if (!find_data) {
+            console.log(`[DELETE BUSINESS] Business not found: ${id}`);
             return NextResponse.json(
                 { message: 'Business not found' },
                 { status: 404 }
             );
         }
 
+        // Delete all gallery images from Supabase Storage
+        const deletionErrors: string[] = [];
+        if (find_data.BusinessGallery && find_data.BusinessGallery.length > 0) {
+            console.log(`[DELETE BUSINESS] Found ${find_data.BusinessGallery.length} gallery images to delete`);
+
+            for (const gallery of find_data.BusinessGallery) {
+                if (gallery.media) {
+                    console.log(`[DELETE BUSINESS] Processing gallery image: ${gallery.media}`);
+                    const filePath = extractFilePathFromUrl(gallery.media, 'businesses');
+
+                    if (filePath) {
+                        const deleteResult = await deleteFile('businesses', filePath);
+                        if (!deleteResult.success) {
+                            const errorMsg = `Failed to delete image ${gallery.media}: ${deleteResult.error}`;
+                            console.error(`[DELETE BUSINESS]`, errorMsg);
+                            deletionErrors.push(errorMsg);
+                        }
+                    } else {
+                        const errorMsg = `Could not extract file path from URL: ${gallery.media}`;
+                        console.error(`[DELETE BUSINESS]`, errorMsg);
+                        deletionErrors.push(errorMsg);
+                    }
+                }
+            }
+        }
+
+        // Delete the business (cascade will delete gallery entries)
         const delete_data = await getPrisma.business.delete({
             where: { id: parseInt(id) }
         });
+
+        console.log(`[DELETE BUSINESS] Successfully deleted business: ${id}`);
+
+        // Return response with warnings if some files couldn't be deleted
+        if (deletionErrors.length > 0) {
+            console.warn(`[DELETE BUSINESS] Completed with ${deletionErrors.length} file deletion errors`);
+            return NextResponse.json({
+                message: 'Business deleted but some images could not be removed from storage',
+                data: delete_data,
+                success: true,
+                warnings: deletionErrors
+            });
+        }
 
         return NextResponse.json({
             message: 'Business deleted successfully',
@@ -97,7 +144,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
         });
 
     } catch (error) {
-        console.error('Error deleting business:', error);
+        console.error('[DELETE BUSINESS ERROR]', error);
         return NextResponse.json(
             { message: 'Error deleting business' },
             { status: 500 }
@@ -108,7 +155,7 @@ export async function DELETE(request: NextRequest, ctx: { params: Promise<{ id: 
 export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await ctx.params;
-        
+
         const business = await getPrisma.business.findUnique({
             where: { id: parseInt(id) },
             select: {
