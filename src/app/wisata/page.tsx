@@ -36,8 +36,6 @@ interface TourismSpot {
 
 interface FilterState {
     search: string
-    priceMin: string
-    priceMax: string
     facilities: string[]
 }
 
@@ -46,8 +44,6 @@ export default function WisataPage() {
     const [loading, setLoading] = useState(true)
     const [filters, setFilters] = useState<FilterState>({
         search: '',
-        priceMin: '',
-        priceMax: '',
         facilities: [],
     })
 
@@ -92,14 +88,6 @@ export default function WisataPage() {
                 const matchesName = spot.name?.toLowerCase().includes(searchLower)
                 const matchesDescription = spot.description?.toLowerCase().includes(searchLower)
                 if (!matchesName && !matchesDescription) return false
-            }
-
-            // Price filter
-            if (filters.priceMin && spot.ticketPrice !== null) {
-                if (spot.ticketPrice < parseInt(filters.priceMin)) return false
-            }
-            if (filters.priceMax && spot.ticketPrice !== null) {
-                if (spot.ticketPrice > parseInt(filters.priceMax)) return false
             }
 
             // Facilities filter

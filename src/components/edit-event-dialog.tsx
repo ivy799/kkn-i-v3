@@ -54,6 +54,8 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false)
+  const [imageFile, setImageFile] = React.useState<File | null>(null)
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null)
   const [formData, setFormData] = React.useState({
     title: event.title,
     description: event.description,
@@ -73,8 +75,22 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
         endDate: event.endDate ? new Date(event.endDate).toISOString().slice(0, 16) : "",
         status: event.status,
       })
+      setImageFile(null)
+      setImagePreview(event.image || null)
     }
   }, [open, event])
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setImageFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,16 +102,23 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
     onOperatingChange?.(true)
 
     try {
+      const formDataToSend = new FormData()
+      formDataToSend.append('title', formData.title)
+      formDataToSend.append('description', formData.description)
+      formDataToSend.append('location', formData.location)
+      formDataToSend.append('startDate', new Date(formData.startDate).toISOString())
+      if (formData.endDate) {
+        formDataToSend.append('endDate', new Date(formData.endDate).toISOString())
+      }
+      formDataToSend.append('status', formData.status)
+
+      if (imageFile) {
+        formDataToSend.append('image', imageFile)
+      }
+
       const response = await fetch(`/api/event/${event.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          startDate: new Date(formData.startDate).toISOString(),
-          endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
-        }),
+        body: formDataToSend,
       })
 
       if (response.ok) {
@@ -154,6 +177,25 @@ export function EditEventDialog({ children, event, onSuccess, onOperatingChange 
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 required
               />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="image">Gambar Acara</Label>
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {imagePreview && (
+                <div className="mt-2">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-48 object-cover rounded-md"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">

@@ -18,8 +18,6 @@ import {
 
 interface FilterState {
     search: string
-    priceMin: string
-    priceMax: string
     facilities: string[]
 }
 
@@ -37,14 +35,6 @@ export function TourismFilterSidebar({
     totalResults,
 }: TourismFilterSidebarProps) {
 
-    const handlePriceMinChange = (value: string) => {
-        onFilterChange({ ...filters, priceMin: value })
-    }
-
-    const handlePriceMaxChange = (value: string) => {
-        onFilterChange({ ...filters, priceMax: value })
-    }
-
     const handleFacilityToggle = (facility: string) => {
         const newFacilities = filters.facilities.includes(facility)
             ? filters.facilities.filter(f => f !== facility)
@@ -55,55 +45,16 @@ export function TourismFilterSidebar({
     const clearFilters = () => {
         onFilterChange({
             search: '',
-            priceMin: '',
-            priceMax: '',
             facilities: [],
         })
     }
 
     const hasActiveFilters =
         filters.search ||
-        filters.priceMin ||
-        filters.priceMax ||
         filters.facilities.length > 0
 
     const FilterContent = () => (
         <div className="space-y-6">
-            {/* Price Range */}
-            <div className="space-y-3">
-                <Label className="text-sm font-semibold">Rentang Harga Tiket</Label>
-                <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                        <Label htmlFor="priceMin" className="text-xs text-muted-foreground">
-                            Minimum
-                        </Label>
-                        <Input
-                            id="priceMin"
-                            type="number"
-                            placeholder="0"
-                            value={filters.priceMin}
-                            onChange={(e) => handlePriceMinChange(e.target.value)}
-                            className="bg-background/50 border-border/50 focus:border-primary transition-colors"
-                        />
-                    </div>
-                    <div className="space-y-1.5">
-                        <Label htmlFor="priceMax" className="text-xs text-muted-foreground">
-                            Maximum
-                        </Label>
-                        <Input
-                            id="priceMax"
-                            type="number"
-                            placeholder="100000"
-                            value={filters.priceMax}
-                            onChange={(e) => handlePriceMaxChange(e.target.value)}
-                            className="bg-background/50 border-border/50 focus:border-primary transition-colors"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <Separator />
-
             {/* Facilities */}
             {availableFacilities.length > 0 && (
                 <div className="space-y-3">
