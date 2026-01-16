@@ -32,7 +32,7 @@ export function Navbar({ user }: NavbarProps) {
       }
       : {
         login: {
-          text: "Dashboard Saya",
+          text: "Dashboard",
           url: "/user-dashboard",
         },
         signup: null,
