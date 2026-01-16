@@ -110,7 +110,7 @@ export default function GalleryPage() {
             {/* Hero Section */}
             <section className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
                 <Image
-                    src="/hero-bg.jpg"
+                    src="/img/img-11.jpeg"
                     alt="Gallery"
                     fill
                     className="object-cover"

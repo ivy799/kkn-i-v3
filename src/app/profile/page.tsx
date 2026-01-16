@@ -89,13 +89,12 @@ export default function ProfilePage() {
     }, [])
 
     return (
-        <div className="min-h-screen bg-white overflow-x-hidden">
-            {/* Hero Image Section */}
+        <div className="min-h-screen overflow-x-hidden">
             <section className="w-full h-[400px] md:h-[500px] lg:h-[600px] relative overflow-hidden">
                 <img
-                    src="/hero-bg.jpg"
+                    src="/img/img-10.jpeg"
                     alt="Desa"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover block"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
 
@@ -152,7 +151,7 @@ export default function ProfilePage() {
                                 <div className="absolute -top-3 -right-3 w-full h-full border-4 border-gray-900 rounded-lg" />
                                 {/* Main image */}
                                 <img
-                                    src="/img/img-02.jpeg"
+                                    src="/img/img-03.jpeg"
                                     alt="Desa Bonto Lojong"
                                     className="relative w-full h-[300px] md:h-[400px] object-cover rounded-lg shadow-lg"
                                 />
@@ -263,7 +262,7 @@ export default function ProfilePage() {
                     <div className={`w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg transition-all duration-1000 ${isProfileVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
                         }`}>
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862248!2d107.57311709999999!3d-6.903444399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127105.08899613483!2d119.86460806257513!3d-5.411788029479776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbeb075b0dba5af%3A0x50cd8b888cf70474!2sBonto%20Lojong%2C%20Kec.%20Uluere%2C%20Kabupaten%20Bantaeng%2C%20Sulawesi%20Selatan!5e0!3m2!1sid!2sid!4v1768566825212!5m2!1sid!2sid"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}

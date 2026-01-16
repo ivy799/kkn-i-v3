@@ -21,7 +21,7 @@ export function AboutSection({
         "Desa Bonto Lojong, yang terletak di Kecamatan Ulu Ere, Kabupaten Bantaeng, memiliki akar sejarah panjang sejak tahun 1943. Berawal dari bagian Desa Bonto Marannu, wilayah ini resmi berdiri sebagai desa persiapan pada tahun 1997 dan definitif pada tahun 2000. Dari masa perintisan jalan poros di zaman kolonial hingga transformasi infrastruktur modern seperti jaringan listrik dan pengaspalan jalan lintas dusun, Bonto Lojong terus berkembang secara dinamis. Kepemimpinan yang silih berganti melalui proses demokrasi, termasuk penerapan sistem e-voting yang inovatif, telah membawa desa ini menjadi wilayah yang maju dengan tata kelola pelayanan publik yang semakin baik.",
 
     ],
-    image = "/img/img-02.jpeg",
+    image = "/img/img-01.jpeg",
     primaryButtonText = "Pelajari Sejarah Kami",
     primaryButtonUrl = "/about",
     secondaryButtonText = "Kenali Tim Kami",

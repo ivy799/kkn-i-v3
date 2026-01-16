@@ -16,7 +16,7 @@ export function HeroSection({
     subtitle = "Jelajahi pesona agrowisata dan panorama pegunungan yang memukau. Petualangan autentik menanti Anda di jantung Sulawesi Selatan.",
     ctaText = "LIHAT SEMUA WISATA",
     ctaUrl = "#wisata",
-    backgroundImage = "/img/img-01.jpeg",
+    backgroundImage = "/img/img-09.jpeg",
 }: HeroSectionProps) {
     const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()

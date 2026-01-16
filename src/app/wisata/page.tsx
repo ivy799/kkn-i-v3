@@ -108,7 +108,7 @@ export default function WisataPage() {
             {/* Hero Section */}
             <section className="relative w-full h-[280px] md:h-[350px] overflow-hidden">
                 <Image
-                    src="/hero-bg.jpg"
+                    src="/img/img-12.jpeg"
                     alt="Wisata Desa"
                     fill
                     className="object-cover"

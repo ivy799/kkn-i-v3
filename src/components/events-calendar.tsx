@@ -60,38 +60,41 @@ export function EventsCalendar({ events, selectedDate, onDateSelect }: EventsCal
         })
     }
 
-    // Custom day content to show event indicators
-    const CustomDay = (props: any) => {
-        const { date } = props
+    // Custom DayButton content to show event indicators
+    const CustomDayButton = (props: any) => {
+        const { day, modifiers, ...buttonProps } = props
+        const date = day?.date
 
         // Safety check for undefined date during SSR
         if (!date) {
-            return <span>-</span>
+            return <button {...buttonProps}>-</button>
         }
 
         const dateEvents = getEventsForDate(date)
         const hasEvents = dateEvents.length > 0
 
         return (
-            <div className="relative flex flex-col items-center">
-                <span>{date.getDate()}</span>
-                {hasEvents && (
-                    <div className="absolute -bottom-1 flex gap-0.5">
-                        {dateEvents.slice(0, 3).map((event, idx) => {
-                            const status = event.startDate ? getEventStatus(event.startDate, event.endDate) : 'COMPLETED'
-                            return (
-                                <div
-                                    key={idx}
-                                    className={`w-1.5 h-1.5 rounded-full ${status === 'UPCOMING' ? 'bg-blue-500' :
-                                        status === 'ONGOING' ? 'bg-green-500' :
-                                            'bg-gray-400'
-                                        }`}
-                                />
-                            )
-                        })}
-                    </div>
-                )}
-            </div>
+            <button {...buttonProps} className={`${buttonProps.className || ''} relative`}>
+                <div className="relative flex flex-col items-center">
+                    <span>{date.getDate()}</span>
+                    {hasEvents && (
+                        <div className="absolute -bottom-1 flex gap-0.5">
+                            {dateEvents.slice(0, 3).map((event, idx) => {
+                                const status = event.startDate ? getEventStatus(event.startDate, event.endDate) : 'COMPLETED'
+                                return (
+                                    <div
+                                        key={idx}
+                                        className={`w-1.5 h-1.5 rounded-full ${status === 'UPCOMING' ? 'bg-blue-500' :
+                                            status === 'ONGOING' ? 'bg-green-500' :
+                                                'bg-gray-400'
+                                            }`}
+                                    />
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
+            </button>
         )
     }
 
@@ -161,7 +164,7 @@ export function EventsCalendar({ events, selectedDate, onDateSelect }: EventsCal
                     },
                 }}
                 components={{
-                    Day: CustomDay,
+                    DayButton: CustomDayButton,
                 }}
             />
 

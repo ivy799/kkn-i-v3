@@ -163,7 +163,7 @@ export default function BusinessPage() {
             {/* Hero Section */}
             <section className="relative w-full h-[280px] md:h-[350px] overflow-hidden">
                 <Image
-                    src="/hero-bg.jpg"
+                    src="/img/img-13.jpeg"
                     alt="UMKM Desa"
                     fill
                     className="object-cover"
@@ -177,7 +177,7 @@ export default function BusinessPage() {
                             UMKM Desa
                         </h1>
                         <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
-                            Temukan produk dan jasa unggulan dari pelaku usaha lokal desa kami
+                            Temukan produk dan jasa unggulan dari desa kami
                         </p>
                     </div>
                 </div>

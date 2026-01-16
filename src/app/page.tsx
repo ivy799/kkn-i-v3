@@ -74,7 +74,7 @@ export default async function Home() {
         paragraphs={[
           "Dikenal sebagai sentra agrowisata unggulan di ketinggian 1200–1500 mdpl, Bonto Lojong menawarkan pesona alam pegunungan yang sejuk dan tanah yang subur. Desa ini merupakan ikon penghasil sayuran utama serta pusat budidaya stroberi dan apel yang menjadi daya tarik wisatawan mancanegara maupun lokal. Kehadiran Mini Showfarm sebagai ikon wisata juga mempertegas posisi Bonto Lojong sebagai destinasi strategis di Kabupaten Bantaeng. Dengan semangat dedikasi dari setiap periode kepemimpinan, desa ini berkomitmen untuk terus mengembangkan potensi ekonomi lokal dan kesejahteraan masyarakat secara berkelanjutan."
         ]}
-        image="/img/img-03.jpeg"
+        image="/img/img-07.jpeg"
         primaryButtonText="Lihat Peta Desa"
         primaryButtonUrl="/map"
       />
