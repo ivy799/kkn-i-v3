@@ -61,13 +61,20 @@ export function EventsCalendar({ events, selectedDate, onDateSelect }: EventsCal
     }
 
     // Custom day content to show event indicators
-    const DayContent = (props: { date: Date }) => {
-        const dateEvents = getEventsForDate(props.date)
+    const CustomDay = (props: any) => {
+        const { date } = props
+
+        // Safety check for undefined date during SSR
+        if (!date) {
+            return <span>-</span>
+        }
+
+        const dateEvents = getEventsForDate(date)
         const hasEvents = dateEvents.length > 0
 
         return (
             <div className="relative flex flex-col items-center">
-                <span>{props.date.getDate()}</span>
+                <span>{date.getDate()}</span>
                 {hasEvents && (
                     <div className="absolute -bottom-1 flex gap-0.5">
                         {dateEvents.slice(0, 3).map((event, idx) => {
@@ -76,8 +83,8 @@ export function EventsCalendar({ events, selectedDate, onDateSelect }: EventsCal
                                 <div
                                     key={idx}
                                     className={`w-1.5 h-1.5 rounded-full ${status === 'UPCOMING' ? 'bg-blue-500' :
-                                            status === 'ONGOING' ? 'bg-green-500' :
-                                                'bg-gray-400'
+                                        status === 'ONGOING' ? 'bg-green-500' :
+                                            'bg-gray-400'
                                         }`}
                                 />
                             )
@@ -154,7 +161,7 @@ export function EventsCalendar({ events, selectedDate, onDateSelect }: EventsCal
                     },
                 }}
                 components={{
-                    DayContent: DayContent,
+                    Day: CustomDay,
                 }}
             />
 

@@ -9,6 +9,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table"
 import { IconMap, IconBuilding, IconCalendarEvent, IconPhoto } from "@tabler/icons-react"
+import { getEventStatus } from "@/lib/eventUtils"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -42,7 +43,7 @@ interface Event {
     title: string
     description: string | null
     startDate: string
-    status: string
+    endDate?: string | null
 }
 
 type DashboardItem = {
@@ -151,11 +152,12 @@ export function DashboardTable({ tourismSpots, businesses, events }: DashboardTa
         })
 
         events.forEach((evt) => {
+            const status = getEventStatus(evt.startDate, evt.endDate)
             items.push({
                 id: evt.id + 2000,
                 name: evt.title,
                 type: "event",
-                category: evt.status,
+                category: status,
                 description: evt.description,
                 extra: new Date(evt.startDate).toLocaleDateString("id-ID"),
             })

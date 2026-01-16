@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
                 address,
                 mapUrl: mapUrl || null,
                 ticketPrice: ticketPrice ? parseInt(ticketPrice) : null,
-                openingHours: openingHours ? new Date(openingHours) : null,
-                closingHours: closingHours ? new Date(closingHours) : null,
+                openingHours: openingHours || null,
+                closingHours: closingHours || null,
                 contactPerson: contactPerson || null,
             },
         });

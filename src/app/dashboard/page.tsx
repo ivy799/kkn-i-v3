@@ -43,7 +43,7 @@ async function getDashboardData() {
         title: true,
         description: true,
         startDate: true,
-        status: true,
+        endDate: true,
       },
       take: 10,
       orderBy: { id: 'desc' },
@@ -63,6 +63,7 @@ async function getDashboardData() {
       ...e,
       title: e.title || 'Untitled Event',
       startDate: e.startDate?.toISOString() || new Date().toISOString(),
+      endDate: e.endDate?.toISOString() || null,
     })),
     chartData: {
       wisata: stats[0],
