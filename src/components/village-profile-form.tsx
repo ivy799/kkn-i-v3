@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Loader2 } from "lucide-react"
 
 interface VillageProfile {
     id: number
@@ -90,7 +91,10 @@ export function VillageProfileForm({ data, loading, onRefresh }: VillageProfileF
         return (
             <div className="px-4 lg:px-6">
                 <div className="flex items-center justify-center py-8">
-                    <p>Loading...</p>
+                    <div className="text-center space-y-4">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
+                        <p className="text-muted-foreground">Memuat data profil...</p>
+                    </div>
                 </div>
             </div>
         )

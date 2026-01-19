@@ -46,7 +46,7 @@ export function Navbar({ user }: NavbarProps) {
     <Navbar1
       logo={{
         url: "/",
-        src: "/logo_bantaeng.webp",
+        src: "/img/logo.png",
         alt: "Logo Desa",
         title: "Desa Bonto Lojong",
       }}
@@ -55,7 +55,6 @@ export function Navbar({ user }: NavbarProps) {
       isAdmin={user?.role === "ADMIN"}
       mobileExtraLinks={[
         { name: "Tentang", url: "/about" },
-        { name: "Kontak", url: "/contact" },
       ]}
     />
   )

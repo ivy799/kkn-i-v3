@@ -39,11 +39,11 @@ export function Footer() {
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-6">
                             <img
-                                src="/logo_bantaeng.webp"
+                                src="/img/logo.png"
                                 alt="Logo Desa"
                                 width={32}
                                 height={32}
-                                className="w-8 h-8 object-contain"
+                                className="w-6 h-8 object-contain"
                             />
                             <span className="text-xl font-bold">Desa Wisata Bonto Lojong</span>
                         </div>

@@ -187,8 +187,8 @@ const Navbar1 = ({
         <div className="hidden lg:flex items-center justify-between h-16">
           <div className="flex items-center gap-6">
             <a href={logo.url} className="flex items-center gap-2">
-              <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
-              <span className="text-lg font-semibold whitespace-nowrap text-white">{logo.title}</span>
+              <img src={logo.src} className="w-6 h-8" alt={logo.alt} />
+              {/* <span className="text-lg font-semibold whitespace-nowrap text-white">{logo.title}</span> */}
             </a>
             <div className="flex items-center">
               <NavigationMenu>
@@ -232,7 +232,7 @@ const Navbar1 = ({
         {/* Mobile Navigation */}
         <div className="flex lg:hidden items-center justify-between h-16">
           <a href={logo.url} className="flex items-center gap-2">
-            <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
+            <img src={logo.src} className="w-6 h-8" alt={logo.alt} />
             <span className="text-lg font-semibold text-white">{logo.title}</span>
           </a>
           <Sheet>
@@ -245,7 +245,7 @@ const Navbar1 = ({
               <SheetHeader>
                 <SheetTitle>
                   <a href={logo.url} className="flex items-center gap-2">
-                    <img src={logo.src} className="w-8 h-8" alt={logo.alt} />
+                    <img src={logo.src} className="w-6 h-8" alt={logo.alt} />
                     <span className="text-lg font-semibold">
                       {logo.title}
                     </span>
@@ -261,7 +261,7 @@ const Navbar1 = ({
                   {menu.map((item) => renderMobileMenuItem(item))}
                 </Accordion>
                 <div className="border-t py-4">
-                  <div className="grid grid-cols-2 justify-start gap-2">
+                  <div className="grid justify-center">
                     {mobileExtraLinks.map((link, idx) => (
                       <a
                         key={idx}

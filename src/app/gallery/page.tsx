@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { ZoomIn, X } from "lucide-react"
+import { ZoomIn, X, Loader2 } from "lucide-react"
 import {
     Dialog,
     DialogContent,
@@ -132,7 +132,10 @@ export default function GalleryPage() {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
                 {loading ? (
                     <div className="flex justify-center items-center py-24">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white" />
+                        <div className="text-center space-y-4">
+                            <Loader2 className="w-12 h-12 animate-spin text-white mx-auto" />
+                            <p className="text-white/80">Memuat galeri...</p>
+                        </div>
                     </div>
                 ) : galleryItems.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 import { AddUserDialog } from "./add-user-dialog"
 import { EditUserDialog } from "./edit-user-dialog"
-import { PlusIcon, Pencil, Trash2 } from "lucide-react"
+import { PlusIcon, Pencil, Trash2, Loader2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
     AlertDialog,
@@ -118,7 +118,10 @@ export function UsersDataTable({ data, loading, onRefresh }: UsersDataTableProps
                         {loading ? (
                             <TableRow>
                                 <TableCell colSpan={5} className="text-center py-8">
-                                    Loading...
+                                    <div className="flex items-center justify-center gap-2">
+                                        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                        <span className="text-muted-foreground">Memuat data...</span>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ) : data.length === 0 ? (

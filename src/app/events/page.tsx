@@ -5,7 +5,7 @@ import { format, isSameDay, parseISO, isWithinInterval } from "date-fns"
 import { id } from "date-fns/locale"
 import { EventCard } from "@/components/event-card"
 import { EventsCalendar } from "@/components/events-calendar"
-import { CalendarDays, List } from "lucide-react"
+import { CalendarDays, List, Loader2 } from "lucide-react"
 import { getEventStatus } from "@/lib/eventUtils"
 
 interface Event {
@@ -157,7 +157,10 @@ export default function EventsPage() {
 
                         {loading ? (
                             <div className="flex justify-center items-center py-12">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                                <div className="text-center space-y-4">
+                                    <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
+                                    <p className="text-muted-foreground">Memuat event...</p>
+                                </div>
                             </div>
                         ) : sortedEvents.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

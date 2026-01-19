@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
 import { IconPlus, IconTrash, IconAlertCircle } from "@tabler/icons-react"
+import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import Image from "next/image"
@@ -143,7 +144,10 @@ export default function UserBusinessPage() {
                             {/* Business List */}
                             {loading ? (
                                 <div className="flex items-center justify-center py-12">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                    <div className="text-center space-y-4">
+                                        <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
+                                        <p className="text-muted-foreground">Memuat data bisnis...</p>
+                                    </div>
                                 </div>
                             ) : businesses.length === 0 ? (
                                 <div className="rounded-xl border bg-card p-12 text-center">
