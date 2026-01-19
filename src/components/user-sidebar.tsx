@@ -86,8 +86,16 @@ export function UserSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) 
                             className="data-[slot=sidebar-menu-button]:!p-1.5"
                         >
                             <a href="/">
-                                <IconInnerShadowTop className="!size-5" />
-                                <span className="text-base font-semibold">Bonto Lojong</span>
+                                <div className="flex items-center gap-3">
+                                    <img
+                                        src="/img/logo.png"
+                                        alt="Logo Desa"
+                                        className="size-8 object-contain"
+                                    />
+                                    <div className="flex flex-col items-start leading-tight">
+                                        <span className="text-sm font-bold">Bonto Lojong</span>
+                                    </div>
+                                </div>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -127,6 +135,6 @@ export function UserSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) 
                     </AlertDialogContent>
                 </AlertDialog>
             </SidebarFooter>
-        </Sidebar>
+        </Sidebar >
     )
 }

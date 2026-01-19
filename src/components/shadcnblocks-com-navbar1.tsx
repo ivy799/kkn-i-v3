@@ -188,7 +188,7 @@ const Navbar1 = ({
           <div className="flex items-center gap-6">
             <a href={logo.url} className="flex items-center gap-2">
               <img src={logo.src} className="w-6 h-8" alt={logo.alt} />
-              {/* <span className="text-lg font-semibold whitespace-nowrap text-white">{logo.title}</span> */}
+              <span className="text-lg font-semibold whitespace-nowrap text-white">{logo.title}</span>
             </a>
             <div className="flex items-center">
               <NavigationMenu>
