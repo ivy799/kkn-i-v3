@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifyToken } from '@/lib/jwt'
+import { verifyTokenEdge } from '@/lib/jwt-edge'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
     const method = request.method
     const token = request.cookies.get('auth_token')?.value
@@ -29,14 +29,14 @@ export function middleware(request: NextRequest) {
         }
 
         try {
-            const payload = verifyToken(token)
+            const payload = await verifyTokenEdge(token)
             requestHeaders.set('x-user-id', payload.userId.toString())
             requestHeaders.set('x-user-role', payload.role)
 
             return NextResponse.next({
                 request: { headers: requestHeaders },
             })
-        } catch (error) {
+        } catch {
             const response = NextResponse.redirect(new URL('/auth/signin', request.url))
             response.headers.set('x-pathname', pathname)
             return response
@@ -52,7 +52,7 @@ export function middleware(request: NextRequest) {
         }
 
         try {
-            const payload = verifyToken(token)
+            const payload = await verifyTokenEdge(token)
 
             if (payload.role !== 'ADMIN') {
                 const response = NextResponse.redirect(new URL('/user-dashboard', request.url))
@@ -66,7 +66,7 @@ export function middleware(request: NextRequest) {
             return NextResponse.next({
                 request: { headers: requestHeaders },
             })
-        } catch (error) {
+        } catch {
             const response = NextResponse.redirect(new URL('/auth/signin', request.url))
             response.headers.set('x-pathname', pathname)
             return response
@@ -79,14 +79,14 @@ export function middleware(request: NextRequest) {
         }
 
         try {
-            const payload = verifyToken(token)
+            const payload = await verifyTokenEdge(token)
             requestHeaders.set('x-user-id', payload.userId.toString())
             requestHeaders.set('x-user-role', payload.role)
 
             return NextResponse.next({
                 request: { headers: requestHeaders },
             })
-        } catch (error) {
+        } catch {
             return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
         }
     }
@@ -109,14 +109,14 @@ export function middleware(request: NextRequest) {
             }
 
             try {
-                const payload = verifyToken(token)
+                const payload = await verifyTokenEdge(token)
                 requestHeaders.set('x-user-id', payload.userId.toString())
                 requestHeaders.set('x-user-role', payload.role)
 
                 return NextResponse.next({
                     request: { headers: requestHeaders },
                 })
-            } catch (error) {
+            } catch {
                 return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
             }
         }
@@ -127,7 +127,7 @@ export function middleware(request: NextRequest) {
         }
 
         try {
-            const payload = verifyToken(token)
+            const payload = await verifyTokenEdge(token)
 
             if (payload.role !== 'ADMIN') {
                 return NextResponse.json({ success: false, message: 'Forbidden: Admin access required' }, { status: 403 })
@@ -139,7 +139,7 @@ export function middleware(request: NextRequest) {
             return NextResponse.next({
                 request: { headers: requestHeaders },
             })
-        } catch (error) {
+        } catch {
             return NextResponse.json({ success: false, message: 'Invalid Token' }, { status: 401 })
         }
     }

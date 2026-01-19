@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
             try {
                 // Import verifyToken
                 const { verifyToken } = await import('@/lib/jwt');
-                const payload = verifyToken(token);
+                const payload = await verifyToken(token);
                 console.log('✅ [API GET] Token verified - User ID:', payload.userId);
                 userId = payload.userId.toString();
             } catch (error) {
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
             try {
                 // Import verifyToken
                 const { verifyToken } = await import('@/lib/jwt');
-                const payload = verifyToken(token);
+                const payload = await verifyToken(token);
                 console.log('✅ [API] Token verified - User ID:', payload.userId);
                 userId = payload.userId.toString();
             } catch (error) {
